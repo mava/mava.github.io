@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+    <title>Math 461: Topology, Fall 2009</title>
+    <updated>2009-12-07T22:00:00Z</updated>
+    <id>http://www.math.binghamton.edu/marco/topology/</id>
+    <link rel="alternate"
+      href="http://www.math.binghamton.edu/marco/topology/index.html"/>
+    <link rel="self"
+      href="http://www.math.binghamton.edu/marco/topology/index.xml"/>
+    <author>
+      <name>Marco Varisco</name>
+      <email>marco@math.binghamton.edu</email>
+      <uri>http://www.math.binghamton.edu/marco/</uri>
+    </author>
+    <icon>http://www.math.binghamton.edu/marco/images/v.png</icon>
+
+  <entry>
+    <title>Quiz #9, M 12/7</title>
+    <author>
+      <name>Marco Varisco</name>
+      <email>marco@math.binghamton.edu</email>
+      <uri>http://www.math.binghamton.edu/marco/</uri>
+    </author>
+    <id>tag:marco@math.binghamton.edu,2009-12-07:quiz9</id>
+    <updated>2009-12-07T22:00:00Z</updated>
+    <link href="http://www.math.binghamton.edu/marco/topology/#hw13a"/>
+    <link rel="enclosure" type="application/pdf"
+      href="http://www.math.binghamton.edu/marco/topology/091207quiz.pdf"/>
+    <content type="html"><![CDATA[
+      Retake (but do not hand in) <a href="091207quiz.pdf"
+      >quiz&nbsp;#9</a>.
+    ]]></content>
+  </entry>
+
+  <entry>
+    <title>Homework #13, due M 12/7</title>
+    <author>
+      <name>Marco Varisco</name>
+      <email>marco@math.binghamton.edu</email>
+      <uri>http://www.math.binghamton.edu/marco/</uri>
+    </author>
+    <id>tag:marco@math.binghamton.edu,2009-12-04:hw13</id>
+    <updated>2009-12-04T21:00:00Z</updated>
+    <link href="http://www.math.binghamton.edu/marco/topology/#hw13"/>
+    <content type="html"><![CDATA[
+      Exercises &sect;24.3, &sect;24.8(c), and &sect;24.8(d).
+    ]]></content>
+  </entry>
+
+  <entry>
+    <title>Homework #12, due M 11/30</title>
+    <author>
+      <name>Marco Varisco</name>
+      <email>marco@math.binghamton.edu</email>
+      <uri>http://www.math.binghamton.edu/marco/</uri>
+    </author>
+    <id>tag:marco@math.binghamton.edu,2009-11-22:hw12</id>
+    <updated>2009-11-22T17:40:00Z</updated>
+    <link href="http://www.math.binghamton.edu/marco/topology/#hw12"/>
+    <content type="html"><![CDATA[
+      Study section&nbsp;&sect;23 up to and including
+      theorem&nbsp;23.5 (pages&nbsp;148&#8211;150),
+      and solve exercises
+      &sect;23.1, &sect;23.2, &sect;23.5, and &sect;23.7
+      (recall that the symbol
+      <img src="http://www.math.binghamton.edu/marco/topology/091130hw.png"
+           alt="&lt;em&gt;R&lt;sub&gt;l&lt;/sub&gt;&lt;/em&gt;"
+         title="&lt;em&gt;R&lt;sub&gt;l&lt;/sub&gt;&lt;/em&gt;"
+      /> in&nbsp;&sect;23.7 denotes
+      the real numbers with the lower limit topology).
+    ]]></content>
+  </entry>
+
+  <entry>
+    <title>Homework #11, due M 11/23</title>
+    <author>
+      <name>Marco Varisco</name>
+      <email>marco@math.binghamton.edu</email>
+      <uri>http://www.math.binghamton.edu/marco/</uri>
+    </author>
+    <id>tag:marco@math.binghamton.edu,2009-11-20:hw11</id>
+    <updated>2009-11-20T18:40:00Z</updated>
+    <link href="http://www.math.binghamton.edu/marco/topology/#hw11"/>
+    <content type="html"><![CDATA[
+      In parts B] and&nbsp;C] below, the symbol <em>R</em> denotes
+      (as usual) the real numbers with the standard topology.<br/>
+      A]&nbsp;Suppose that <em>X</em> and&nbsp;<em>Y</em> are
+      topological spaces and that
+      <em>f</em>:&nbsp;<em>X</em>&nbsp;&rarr;&nbsp;<em>Y</em> is a
+      continuous function. Show that if <em>X</em> is compact then
+      <em>f(X)</em> is compact.<br/>
+      B]&nbsp;Suppose that <em>C</em> is a non-empty compact subspace
+      of&nbsp;<em>R</em>. Show that <em>C</em> has a least element,
+      i.e., that there exists <em>c</em>&isin;<em>C</em> such that
+      for all&nbsp;<em>x</em>&isin;<em>C</em> we have
+      <em>c</em>&le;<em>x</em>. (Hint: argue by contradiction, and
+      observe that
+      {&nbsp;(<em>x,&infin;</em>)&nbsp;|&nbsp;<em>x</em>&isin;<em>C</em>&nbsp;}
+      is an open cover of&nbsp;<em>C</em> if and only if <em>C</em>
+      does not have a least element.) Is&nbsp;<em>c</em> unique?<br/>
+      C]&nbsp;Suppose that <em>X</em> is a non-empty compact
+      topological space and that
+      <em>f</em>:&nbsp;<em>X</em>&nbsp;&rarr;&nbsp;<em>R</em> is a
+      continuous function. Use parts A] and&nbsp;B] to show
+      that there exists <em>m</em>&isin;<em>X</em> such that
+      for all&nbsp;<em>x</em>&isin;<em>X</em> we have
+      <em>f(m)</em>&le;<em>f(x)</em>. Is&nbsp;<em>m</em> unique?
+    ]]></content>
+  </entry>
+
+  <entry>
+    <title>Quiz #7, R 11/12</title>
+    <author>
+      <name>Marco Varisco</name>
+      <email>marco@math.binghamton.edu</email>
+      <uri>http://www.math.binghamton.edu/marco/</uri>
+    </author>
+    <id>tag:marco@math.binghamton.edu,2009-11-12:quiz7</id>
+    <updated>2009-11-12T21:00:00Z</updated>
+    <link href="http://www.math.binghamton.edu/marco/topology/#hw10a"/>
+    <link rel="enclosure" type="application/pdf"
+      href="http://www.math.binghamton.edu/marco/topology/091112quiz.pdf"/>
+    <content type="html"><![CDATA[
+      Retake (but do not hand in) <a href="091112quiz.pdf"
+      >quiz&nbsp;#7</a>.
+    ]]></content>
+  </entry>
+
+  <entry>
+    <title>Homework #10, due M 11/16</title>
+    <author>
+      <name>Marco Varisco</name>
+      <email>marco@math.binghamton.edu</email>
+      <uri>http://www.math.binghamton.edu/marco/</uri>
+    </author>
+    <id>tag:marco@math.binghamton.edu,2009-11-11:hw10</id>
+    <updated>2009-11-11T16:11:00Z</updated>
+    <link href="http://www.math.binghamton.edu/marco/topology/#hw10"/>
+    <content type="html"><![CDATA[
+      A]&nbsp;Show that the lower limit topology on&nbsp;<em>R</em> is
+      Hausdorff and first-countable, but not metrizable. (Hint: in
+      order to prove that it is not metrizable, show that it
+      is&nbsp;&#8230; but not&nbsp;&#8230;, and apply a result
+      discussed in class.)<br/>
+      B]&nbsp;Show that any set of pairwise disjoint open subsets
+      of a separable topological space is countable. <br/>
+      C]&nbsp;Show that any discrete subspace
+      of a second-countable topological space is countable.
+    ]]></content>
+  </entry>
+
+  <entry>
+    <title>Riddle, due M 11/9</title>
+    <author>
+      <name>Marco Varisco</name>
+      <email>marco@math.binghamton.edu</email>
+      <uri>http://www.math.binghamton.edu/marco/</uri>
+    </author>
+    <id>tag:marco@math.binghamton.edu,2009-11-10:riddle</id>
+    <updated>2009-11-10T23:30:15Z</updated>
+    <link href="http://www.math.binghamton.edu/marco/topology/#hw9a"/>
+    <content type="html"><![CDATA[
+      Consider a set&nbsp;<em>S</em> of disjoint figure-eight
+      curves in the plane; can <em>S</em> be uncountable?
+    ]]></content>
+  </entry>
+
+  <entry>
+    <title>Homework #9, due W 11/4</title>
+    <author>
+      <name>Marco Varisco</name>
+      <email>marco@math.binghamton.edu</email>
+      <uri>http://www.math.binghamton.edu/marco/</uri>
+    </author>
+    <id>tag:marco@math.binghamton.edu,2009-11-10:hw9</id>
+    <updated>2009-11-10T23:30:14Z</updated>
+    <link href="http://www.math.binghamton.edu/marco/topology/#hw9"/>
+    <content type="html"><![CDATA[
+      Let <em>(X,d)</em> be a metric space, let <em>A</em> be a
+      subset of&nbsp;<em>X</em>, and let <em>x</em> be a point
+      in&nbsp;<em>X</em>. Show that <em>x</em> is in the closure
+      of&nbsp;<em>A</em> if and only if
+      <em>inf</em>{<em>d(x,a)</em>|<em>a</em>&isin;<em>A</em>}=<em>0</em>.
+    ]]></content>
+  </entry>
+
+  <entry>
+    <title>Quiz #6, R 10/22</title>
+    <author>
+      <name>Marco Varisco</name>
+      <email>marco@math.binghamton.edu</email>
+      <uri>http://www.math.binghamton.edu/marco/</uri>
+    </author>
+    <id>tag:marco@math.binghamton.edu,2009-11-10:quiz6</id>
+    <updated>2009-11-10T23:30:13Z</updated>
+    <link href="http://www.math.binghamton.edu/marco/topology/#hw8a"/>
+    <link rel="enclosure" type="application/pdf"
+      href="http://www.math.binghamton.edu/marco/topology/091022quiz.pdf"/>
+    <content type="html"><![CDATA[
+      Retake (but do not hand in) <a href="091022quiz.pdf"
+      >quiz&nbsp;#6</a>.
+    ]]></content>
+  </entry>
+
+  <entry>
+    <title>Homework #8, due M 10/19</title>
+    <author>
+      <name>Marco Varisco</name>
+      <email>marco@math.binghamton.edu</email>
+      <uri>http://www.math.binghamton.edu/marco/</uri>
+    </author>
+    <id>tag:marco@math.binghamton.edu,2009-11-10:hw8</id>
+    <updated>2009-11-10T23:30:12Z</updated>
+    <link href="http://www.math.binghamton.edu/marco/topology/#hw8"/>
+    <content type="html"><![CDATA[
+      Exercises &sect;17.6, &sect;17.7, and &sect;17.8.
+    ]]></content>
+  </entry>
+
+  <entry>
+    <title>Homework #7, due R 10/8</title>
+    <author>
+      <name>Marco Varisco</name>
+      <email>marco@math.binghamton.edu</email>
+      <uri>http://www.math.binghamton.edu/marco/</uri>
+    </author>
+    <id>tag:marco@math.binghamton.edu,2009-11-10:hw7</id>
+    <updated>2009-11-10T23:30:11Z</updated>
+    <link href="http://www.math.binghamton.edu/marco/topology/#hw7"/>
+    <link rel="enclosure" type="application/pdf"
+      href="http://www.math.binghamton.edu/marco/topology/091008hw.pdf"/>
+    <content type="html"><![CDATA[
+      <a href="091008hw.pdf">Prime time!</a>
+    ]]></content>
+  </entry>
+
+  <entry>
+    <title>Homework #6, due M 10/5</title>
+    <author>
+      <name>Marco Varisco</name>
+      <email>marco@math.binghamton.edu</email>
+      <uri>http://www.math.binghamton.edu/marco/</uri>
+    </author>
+    <id>tag:marco@math.binghamton.edu,2009-11-10:hw6</id>
+    <updated>2009-11-10T23:30:10Z</updated>
+    <link href="http://www.math.binghamton.edu/marco/topology/#hw6"/>
+    <content type="html"><![CDATA[
+      Exercise &sect;13.1.
+    ]]></content>
+  </entry>
+
+  <entry>
+    <title>Quiz #4, W 9/30</title>
+    <author>
+      <name>Marco Varisco</name>
+      <email>marco@math.binghamton.edu</email>
+      <uri>http://www.math.binghamton.edu/marco/</uri>
+    </author>
+    <id>tag:marco@math.binghamton.edu,2009-11-10:quiz4</id>
+    <updated>2009-11-10T23:30:09Z</updated>
+    <link href="http://www.math.binghamton.edu/marco/topology/#hw6"/>
+    <link rel="enclosure" type="application/pdf"
+      href="http://www.math.binghamton.edu/marco/topology/090930quiz.pdf"/>
+    <content type="html"><![CDATA[
+      Retake (but do not hand in) <a href="090930quiz.pdf"
+      >quiz&nbsp;#4</a>.
+    ]]></content>
+  </entry>
+
+  <entry>
+    <title>Homework #5, due F 9/25</title>
+    <author>
+      <name>Marco Varisco</name>
+      <email>marco@math.binghamton.edu</email>
+      <uri>http://www.math.binghamton.edu/marco/</uri>
+    </author>
+    <id>tag:marco@math.binghamton.edu,2009-11-10:hw5</id>
+    <updated>2009-11-10T23:30:08Z</updated>
+    <link href="http://www.math.binghamton.edu/marco/topology/#hw5"/>
+    <content type="html"><![CDATA[
+      Write down explicitly what it means for a function between
+      metric spaces to be discontinuous.
+    ]]></content>
+  </entry>
+
+  <entry>
+    <title>Homework #4, due F 9/24</title>
+    <author>
+      <name>Marco Varisco</name>
+      <email>marco@math.binghamton.edu</email>
+      <uri>http://www.math.binghamton.edu/marco/</uri>
+    </author>
+    <id>tag:marco@math.binghamton.edu,2009-11-10:hw4</id>
+    <updated>2009-11-10T23:30:07Z</updated>
+    <link href="http://www.math.binghamton.edu/marco/topology/#hw4"/>
+    <content type="html"><![CDATA[
+      Let <em>(X,d)</em> be an arbitrary metric space.
+      Given any point <em>a</em> in&nbsp;<em>X</em>
+      and any non-negative real number&nbsp;<em>r</em>,
+      prove that
+  {&nbsp;<em>x</em>&isin;<em>X</em>&nbsp;|&nbsp;<em>d(a,x)&le;r</em>&nbsp;}
+      is closed.
+    ]]></content>
+  </entry>
+
+  <entry>
+    <title>Homework #3, due M 9/21</title>
+    <author>
+      <name>Marco Varisco</name>
+      <email>marco@math.binghamton.edu</email>
+      <uri>http://www.math.binghamton.edu/marco/</uri>
+    </author>
+    <id>tag:marco@math.binghamton.edu,2009-11-10:hw3</id>
+    <updated>2009-11-10T23:30:06Z</updated>
+    <link href="http://www.math.binghamton.edu/marco/topology/#hw3"/>
+    <content type="html"><![CDATA[
+      A]&nbsp;Let <em>(X,d)</em> be an arbitrary metric space.
+      Prove that for all distinct points 
+      <em>x<sub>1</sub></em> and&nbsp;<em>x<sub>2</sub></em>
+      in&nbsp;<em>X</em> there exist positive real numbers
+      <em>&epsilon;<sub>1</sub></em> and&nbsp;<em>&epsilon;<sub>2</sub></em>
+      such that
+      <em>B<sub>d</sub>(x<sub>1</sub>;&epsilon;<sub>1</sub>)</em> and
+      <em>B<sub>d</sub>(x<sub>2</sub>;&epsilon;<sub>2</sub>)</em> are
+      disjoint.<br/>
+      B]&nbsp;Find a metric space and two balls in it such that the
+      ball with smaller radius contains and is not equal to the ball
+      with larger radius.
+    ]]></content>
+  </entry>
+
+  <entry>
+    <title>Quiz #3, R 9/17</title>
+    <author>
+      <name>Marco Varisco</name>
+      <email>marco@math.binghamton.edu</email>
+      <uri>http://www.math.binghamton.edu/marco/</uri>
+    </author>
+    <id>tag:marco@math.binghamton.edu,2009-11-10:quiz3</id>
+    <updated>2009-11-10T23:30:05Z</updated>
+    <link href="http://www.math.binghamton.edu/marco/topology/#hw3"/>
+    <link rel="enclosure" type="application/pdf"
+      href="http://www.math.binghamton.edu/marco/topology/090917quiz.pdf"/>
+    <content type="html"><![CDATA[
+      Retake (but do not hand in) <a href="090917quiz.pdf"
+      >quiz&nbsp;#3</a>.
+    ]]></content>
+  </entry>
+
+  <entry>
+    <title>Homework #2, due M 9/17</title>
+    <author>
+      <name>Marco Varisco</name>
+      <email>marco@math.binghamton.edu</email>
+      <uri>http://www.math.binghamton.edu/marco/</uri>
+    </author>
+    <id>tag:marco@math.binghamton.edu,2009-11-10:hw2</id>
+    <updated>2009-11-10T23:30:04Z</updated>
+    <link href="http://www.math.binghamton.edu/marco/topology/#hw2"/>
+    <content type="html"><![CDATA[
+      In <em>R<sup>2</sup></em> draw the spheres of
+      radius&nbsp;<em>1</em> centered at the
+      origin&nbsp;<em>(0,0)</em> with respect to: 1)&nbsp;the
+      Euclidean metric; 2)&nbsp;the taxicab metric; 3)&nbsp;the square
+      metric; and 4)&nbsp;the discrete metric.
+    ]]></content>
+  </entry>
+
+  <entry>
+    <title>Quiz #2, M 9/14</title>
+    <author>
+      <name>Marco Varisco</name>
+      <email>marco@math.binghamton.edu</email>
+      <uri>http://www.math.binghamton.edu/marco/</uri>
+    </author>
+    <id>tag:marco@math.binghamton.edu,2009-11-10:quiz2</id>
+    <updated>2009-11-10T23:30:03Z</updated>
+    <link href="http://www.math.binghamton.edu/marco/topology/#hw1b"/>
+    <link rel="enclosure" type="application/pdf"
+      href="http://www.math.binghamton.edu/marco/topology/090914quiz.pdf"/>
+    <content type="html"><![CDATA[
+      Retake (but do not hand in) <a href="090914quiz.pdf"
+      >quiz&nbsp;#2</a>.
+    ]]></content>
+  </entry>
+
+  <entry>
+    <title>Quiz #1, W 9/9</title>
+    <author>
+      <name>Marco Varisco</name>
+      <email>marco@math.binghamton.edu</email>
+      <uri>http://www.math.binghamton.edu/marco/</uri>
+    </author>
+    <id>tag:marco@math.binghamton.edu,2009-11-10:quiz1</id>
+    <updated>2009-11-10T23:30:02Z</updated>
+    <link href="http://www.math.binghamton.edu/marco/topology/#hw1a"/>
+    <link rel="enclosure" type="application/pdf"
+      href="http://www.math.binghamton.edu/marco/topology/090909quiz.pdf"/>
+    <content type="html"><![CDATA[
+      Retake (but do not hand in) <a href="090909quiz.pdf"
+      >quiz&nbsp;#1</a>.
+    ]]></content>
+  </entry>
+
+  <entry>
+    <title>Homework #1, due W 9/9</title>
+    <author>
+      <name>Marco Varisco</name>
+      <email>marco@math.binghamton.edu</email>
+      <uri>http://www.math.binghamton.edu/marco/</uri>
+    </author>
+    <id>tag:marco@math.binghamton.edu,2009-11-10:hw1</id>
+    <updated>2009-11-10T23:30:01Z</updated>
+    <link href="http://www.math.binghamton.edu/marco/topology/#hw1"/>
+    <content type="html"><![CDATA[
+      Exercise &sect;2.4.
+    ]]></content>
+  </entry>
+
+</feed>

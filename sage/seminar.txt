@@ -1,0 +1,331 @@
+<h1><a href="http://www.albany.edu/~mv312143/sage/" target="_blank">An Introduction to Sage</a></h1>
+<h2>Marco Varisco</h2>
+<h3><a href="http://www.albany.edu/~mv312143/seminar/" target="_blank">Algebra/Topology Seminar</a>, February 7, 2013</h3>
+<ul>
+<li><a href="#calculator">Sage as a (smart) calculator</a></li>
+<li><a href="#algorithm">A simple algorithm</a></li>
+<li><a href="#pictures">Some calculus and pretty pictures</a></li>
+<li><a href="#equations">Solving equations</a></li>
+<li><a href="#groups">Playing with finite groups</a></li>
+<li><a href="#mfr">Minimal free resolutions of monomial ideals</a></li>
+</ul>
+<hr />
+<h2 id="calculator">Sage as a <em>(smart)</em> calculator</h2>
+sage: 2^16
+65536
+sage: 2^160
+1461501637330902918203684832716283019655932542976
+sage: sin(pi/3)
+1/2*sqrt(3)
+sage: numerical_approx(sin(pi/3)); n(sin(pi/3)); sin(pi/3).n()
+0.866025403784439
+0.866025403784439
+0.866025403784439
+sage: n(sin(pi/3), digits=50)
+0.86602540378443864676372317075293618347140262690519
+sage: sin(pi/3).n(digits=3)
+0.866
+sage: a = 12222
+sage: a
+12222
+sage: factor(a)
+2 * 3^2 * 7 * 97
+sage: a.factor()
+2 * 3^2 * 7 * 97
+sage: a.prime_divisors()
+[2, 3, 7, 97]
+sage: pd = _
+sage: pd
+[2, 3, 7, 97]
+sage: pd[0]
+2
+sage: pd.append('text')
+sage: pd
+[2, 3, 7, 97, 'text']
+sage: a % 55
+12
+sage: a.inverse_mod(55)
+23
+sage: a.inverse_mod(56)
+Traceback (most recent call last):
+...
+ZeroDivisionError: Inverse does not exist.
+sage: A = mod(a, 55)
+sage: type(a); type(A)
+<type 'sage.rings.integer.Integer'>
+<type 'sage.rings.finite_rings.integer_mod.IntegerMod_int'>
+sage: A^-1
+23
+sage: a^-1
+1/12222
+sage: A.multiplicative_order()
+4
+<h2 id="algorithm">A simple algorithm</h2>
+sage: def EA(a, b):
+...       while b!=0:
+...           r = a%b
+...           a = b
+...           b = r
+...       return a
+sage: EA(12222, 55)
+1
+sage: EA(12222, 550)
+2
+sage: def EA(a, b, show=False):
+...       while b!=0:
+...           r = a%b
+...           if show: print (a,b,r)
+...           a = b; b = r
+...       if a<0: a = -a
+...       return a
+sage: EA(12222, 550, show=True)
+(12222, 550, 122)
+(550, 122, 62)
+(122, 62, 60)
+(62, 60, 2)
+(60, 2, 0)
+2
+sage: EA(12222, 550) == gcd(12222, 550)
+True
+sage: xgcd(12222, 550)
+(2, -9, 200)
+sage: d, s, t = xgcd(12222, 550)
+sage: d == s*12222 + t*550
+True
+<h2 id="pictures">Some calculus and pretty pictures</h2>
+sage: f = atan(sqrt(x))
+sage: f
+arctan(sqrt(x))
+sage: type(f)
+<type 'sage.symbolic.expression.Expression'>
+sage: If = f.integrate(x)
+sage: If
+x*arctan(sqrt(x)) - sqrt(x) + arctan(sqrt(x))
+sage: show(If)
+<html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}x \arctan\left(\sqrt{x}\right) - \sqrt{x} + \arctan\left(\sqrt{x}\right)</script></html>
+sage: latex(If)
+x \arctan\left(\sqrt{x}\right) - \sqrt{x} + \arctan\left(\sqrt{x}\right)
+<p>At this point you should check the <strong>Typeset</strong> box at the top of this worksheet.</p>
+sage: DIf = If.differentiate(x)
+sage: f - DIf
+<html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}-\frac{\sqrt{x}}{2 \, {\left(x + 1\right)}} + \frac{1}{2 \, \sqrt{x}} - \frac{1}{2 \, {\left(x + 1\right)} \sqrt{x}}</script></html>
+sage: (f - DIf).simplify_full()
+<html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}0</script></html>
+sage: f = x*cos(x)^2
+sage: f
+<html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}x \cos\left(x\right)^{2}</script></html>
+sage: plot(f)
+sage: p = plot(f, xmin=-1, xmax=3.5, ymin=-0.5, ymax=3.5, aspect_ratio=.5, gridlines=True, color='purple', thickness=10, alpha=0.2, figsize=6)
+sage: p
+<html><font color='black'><img src='cell://sage0.png'></font></html>
+sage: p.save('plot.pdf')
+sage: plotf = plot(f, (x,-1,3.5), color='purple', thickness=3)
+sage: origin = point((0,0), color='orange', alpha=.7, size=150)
+sage: label = 'MacLaurin polynomial of $%s$ of degree'%latex(f)
+sage: @interact
+sage: def foo(j=slider(0, 20, 1, default=3, label=label)):
+...       Tjf = f.taylor(x, 0, j)
+...       plotTjf = plot(Tjf, (x,-1,3.5), color='green', thickness=1.5, fill=f)
+...       html('$%s$'%latex(Tjf))
+...       show(plotf + plotTjf + origin, ymin=-0.5, ymax=3.5, figsize=[7,3])
+<html><!--notruncate-->
+        <div padding=6 id="div-interact-60">
+          <table width=800px height=20px bgcolor="#c5c5c5" cellpadding=15>
+            <tr>
+              <td bgcolor="#f9f9f9" valign=top align=left>
+            <table>
+              <tr><td colspan=3><table><tr><td align=right><font color="black">MacLaurin polynomial of $x \cos\left(x\right)^{2}$ of degree&nbsp;</font></td><td>
+        <table>
+          <tr>
+            <td>
+              <div id="slider-j-60" style="margin:0px; margin-left: 1.0em; margin-right: 1.0em; width: 15.0em;"></div>
+            </td>
+            
+            <td>
+              <font color="black" id="slider-j-60-lbl"></font>
+            </td>
+          </tr>
+        </table><script>
+    (function() {
+        var values = ["0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20"];
+        setTimeout(function() {
+            $('#slider-j-60').slider({
+                step: 1,
+                min: 0,
+                max: 20,
+                value: 3,
+                change: function (e, ui) {
+                    var position = ui.value;
+                    if (values != null) {
+                        $('#slider-j-60-lbl').text(values[position]);
+                        interact(60, {variable: 'j', adapt_number: 3, value: encode64(position)}, 1);
+                    }
+                },
+                slide: function (e, ui) {
+                    if (values != null) {
+                        $('#slider-j-60-lbl').text(values[ui.value]);
+                    }
+                }
+            });
+            if (values != null) {
+                $('#slider-j-60-lbl').text(values[$('#slider-j-60').slider('value')]);
+            }
+        }, 1);
+    })();
+    </script></td>
+</tr></table></td></tr>
+              <tr><td></td><td style='width: 100%;'>
+        <div id="cell-interact-60"><?__SAGE__START>
+          <table border=0 bgcolor="white" width=100%>
+            <tr>
+              <td bgcolor="white" align=left valign=top>
+                <pre>
+<font color='black'><script type="math/tex">-x^{3} + x</script></font>
+<font color='black'><img src=/home/admin/6/cells/60/sage0.png?3673147762881719045></font>
+</pre>
+              </td>
+            </tr>
+            <tr>
+              <td align=left valign=top></td>
+            </tr>
+          </table><?__SAGE__END>
+        </div></td><td></td></tr>
+              <tr><td colspan=3></td></tr>
+            </table></td>
+            </tr>
+          </table>
+        </div></html>
+sage: frames = []
+sage: for j in range(-1, 21, 2):
+...       Tjf = f.taylor(x, 0, j)
+...       plotTjf = plot(Tjf, (x,-1,3.5), color='green', thickness=1.5, fill=f)
+...       t = text('$%s$'%latex(Tjf), (3,-0.8), color='black', horizontal_alignment='right')
+...       frames.append(t + plotf + plotTjf + origin)
+...
+sage: a = animate(frames, ymin=-0.5, ymax=3.5, figsize=[7,3])
+sage: a.show(delay=40, iterations=4)
+sage: var('x, y, z')
+sage: f = x^2 + y^2 + z^2 + cos(4*x) + cos(4*y) + cos(4*z)
+sage: c = 0.2
+sage: implicit_plot3d(f==c, (x, -1.2, 1.2), (y, -1.2, 1.2), (z, -1.2, 1.2))
+sage: implicit_plot3d(f==c, (x, -1.2, 1.2), (y, -1.2, 1.2), (z, -1.2, 1.2), opacity=2/3) + dodecahedron((0,0,0), 1/2, color="purple", opacity=2/3)
+<h2 id="equations">Solving equations</h2>
+sage: solve(x^3 + 6*x == 20, x)
+<html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}\left[x = \left(-3 i - 1\right), x = \left(3 i - 1\right), x = 2\right]</script></html>
+sage: solve(x^4 + 6*x == 20, x)[0]
+<html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}x = -\frac{1}{2} \, \sqrt{\frac{3 \, {\left(\frac{2}{9} \, \sqrt{3} \sqrt{130187} + 18\right)}^{\left(\frac{2}{3}\right)} - 80}{{\left(\frac{2}{9} \, \sqrt{3} \sqrt{130187} + 18\right)}^{\frac{1}{3}}}} \sqrt{\frac{1}{3}} - \frac{1}{2} \, \sqrt{-{\left(\frac{2}{9} \, \sqrt{3} \sqrt{130187} + 18\right)}^{\left(\frac{1}{3}\right)} + \frac{36 \, \sqrt{\frac{1}{3}}}{\sqrt{\frac{3 \, {\left(\frac{2}{9} \, \sqrt{3} \sqrt{130187} + 18\right)}^{\left(\frac{2}{3}\right)} - 80}{{\left(\frac{2}{9} \, \sqrt{3} \sqrt{130187} + 18\right)}^{\frac{1}{3}}}}} + \frac{80}{3 \, {\left(\frac{2}{9} \, \sqrt{3} \sqrt{130187} + 18\right)}^{\left(\frac{1}{3}\right)}}}</script></html>
+sage: solve(x^5 + 6*x == 20, x)
+<html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}\left[0 = x^{5} + 6 \, x - 20\right]</script></html>
+sage: find_root(x^5 + 6*x == 20, 0, 1)
+Traceback (most recent call last):
+...
+RuntimeError: f appears to have no zero on the interval
+sage: find_root(x^5 + 6*x == 20, 0, 2)
+<html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}1.59778267898</script></html>
+sage: var('x, y, z')
+sage: solve([x + 3*y - 2*z == 5, 3*x + 5*y + 6*z == 7], x, y, z)
+<html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}\left[\left[x = -7 \, r_{1} - 1, y = 3 \, r_{1} + 2, z = r_{1}\right]\right]</script></html>
+sage: A = matrix([[1, 3, -2], [3, 5, 6]])
+sage: v = vector([5, 7])
+sage: A.solve_right(v)
+<html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}\left(-1,\,2,\,0\right)</script></html>
+sage: A.right_kernel()
+<html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}\mathrm{RowSpan}_{\Bold{Z}}\left(\begin{array}{rrr}
+7 & -3 & -1
+\end{array}\right)</script></html>
+sage: Av = A.augment(v)
+sage: Av.echelon_form()
+<html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}\left(\begin{array}{rrrr}
+1 & 3 & -2 & 5 \\
+0 & 4 & -12 & 8
+\end{array}\right)</script></html>
+sage: type(Av)
+<html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}\verb|<type|\phantom{\verb!x!}\verb|'sage.matrix.matrix_integer_dense.Matrix_integer_dense'>|</script></html>
+sage: Av = Av.change_ring(QQ)
+sage: type(Av); Av.echelon_form()
+<html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}\verb|<type|\phantom{\verb!x!}\verb|'sage.matrix.matrix_rational_dense.Matrix_rational_dense'>|</script></html>
+<html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}\left(\begin{array}{rrrr}
+1 & 0 & 7 & -1 \\
+0 & 1 & -3 & 2
+\end{array}\right)</script></html>
+<h2 id="groups">Playing with finite groups</h2>
+<p>Unckeck the <strong>Typeset</strong> box now, please.</p>
+sage: S4 = SymmetricGroup(4)
+sage: S4
+Symmetric group of order 4! as a permutation group
+sage: show(S4)
+<html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}\langle (1,2,3,4), (1,2) \rangle</script></html>
+sage: S4.conjugacy_classes_representatives()
+[(), (1,2), (1,2)(3,4), (1,2,3), (1,2,3,4)]
+sage: len(S4.conjugacy_classes_representatives()), len(S4.subgroups()), len(S4.conjugacy_classes_subgroups()), len(S4.normal_subgroups())
+(5, 30, 11, 4)
+sage: u = S4( (1,2,3,4) )
+sage: v = S4( (2,4) )
+sage: w = S4( ((1,2),(3,4)) )
+sage: u.order(), u*v, w==u^-1*v
+(4, (1,4)(2,3), True)
+sage: G = S4.subgroup([u, v])
+sage: G.order(), G.is_abelian(), G.center().order(), G.is_isomorphic(DihedralGroup(4))
+(8, False, 2, True)
+sage: (1,4) in G, (1,3) in G
+(False, True)
+sage: G.cayley_graph(generators=[u, v]).show(color_by_label=True)
+<html><font color='black'><img src='cell://sage0.png'></font></html>
+sage: G.cayley_graph(generators=[v, w]).show(color_by_label=True)
+<html><font color='black'><img src='cell://sage0.png'></font></html>
+sage: T = G.cayley_table()
+sage: T
+*  a b c d e f g h
+ +----------------
+a| a b c d e f g h
+b| b a d c f e h g
+c| c g a e d h b f
+d| d h b f c g a e
+e| e f g h a b c d
+f| f e h g b a d c
+g| g c e a h d f b
+h| h d f b g c e a
+sage: T.translation()
+{'a': (), 'c': (1,2)(3,4), 'b': (2,4), 'e': (1,3), 'd': (1,2,3,4), 'g': (1,4,3,2), 'f': (1,3)(2,4), 'h': (1,4)(2,3)}
+sage: from sage.matrix.operation_table import OperationTable
+sage: def commutator(h, g): return h*g*h^-1*g^-1
+sage: OperationTable(G, commutator)
+.  a b c d e f g h
+ +----------------
+a| a a a a a a a a
+b| a a f f a a f f
+c| a f a f f a f a
+d| a f f a f a a f
+e| a a f f a a f f
+f| a a a a a a a a
+g| a f f a f a a f
+h| a f a f f a f a
+<h2 id="mfr">Minimal free resolutions of monomial ideals</h2>
+sage: R.<a,b,c,d,e> = PolynomialRing(QQ)
+sage: I = R.ideal([a*c, b*d, a*e, d*e])
+sage: R; I
+Multivariate Polynomial Ring in a, b, c, d, e over Rational Field
+Ideal (a*c, b*d, a*e, d*e) of Multivariate Polynomial Ring in a, b, c, d, e over Rational Field
+sage: I.syzygy_module()
+[  -e    0    c    0]
+[   0   -e    0    b]
+[   0    0   -d    a]
+[-b*d  a*c    0    0]
+sage: singular.mres(I, 0)
+[1]:
+   _[1]=d*e
+   _[2]=a*e
+   _[3]=b*d
+   _[4]=a*c
+[2]:
+   _[1]=c*gen(2)-e*gen(4)
+   _[2]=b*gen(1)-e*gen(3)
+   _[3]=a*gen(1)-d*gen(2)
+   _[4]=a*c*gen(3)-b*d*gen(4)
+[3]:
+   _[1]=a*c*gen(2)-b*c*gen(3)-b*d*gen(1)+e*gen(4)
+[4]:
+   _[1]=0
+[5]:
+   _[1]=gen(1)
+<h2>And don&rsquo;t forget the SageTeX example! <a href="http://www.albany.edu/~mv312143/sage/" target="_blank">$\infty$</a></h2>

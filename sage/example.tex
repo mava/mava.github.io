@@ -1,0 +1,38 @@
+\documentclass[12pt]{article}
+
+\author{Marco Varisco}
+\title{Sage\TeX\ Example}
+\date{Algebra/Topology Seminar, February 7, 2013}
+
+\usepackage{sagetex}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+With Sage\TeX\ you can use Sage to compute and put stuff in your \LaTeX\ document.
+Here are a couple silly examples.
+
+\begin{itemize}
+
+\item The first fifty decimal digits of~$\pi$ are:
+\[
+    \sage{pi.n(digits=51)}\ldots
+\]
+
+\begin{sagesilent}
+    A = matrix(QQ, [[0, 1, 2], [1, 0, 3], [4, -3, 8]])
+\end{sagesilent}
+\item The inverse of the matrix $\sage{A}$ is~$\sage{A^-1}$.
+
+\begin{sagesilent}
+    R.<x,y,z> = PolynomialRing(QQ)
+    B = matrix(R, [[1, x, y], [0, 1, z], [0, 0, 1]])
+    latex.matrix_delimiters(left='[', right=']')
+\end{sagesilent}
+\item $\sage{A}\sage{B}=\sage{A*B}$.
+
+\end{itemize}
+
+\end{document}

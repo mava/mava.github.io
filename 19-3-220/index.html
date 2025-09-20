@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8"/>
+  <title>Linear Algebra, Spring 2019</title>
+  <link rel="shortcut icon" href="../images/UAfavicon.ico"/>
+  <link rel="stylesheet" href="../code/courses.css"/>
+  <meta name="author" content="Marco Varisco"/>
+  <meta name="description" content="Syllabus for AMAT 220: Linear Algebra, University at Albany, State University of New York"/>
+  <meta name="keywords" content="linear algebra, math, mathematics, syllabus"/>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+
+    google.charts.load('current', {'packages':['corechart']});
+
+    google.charts.setOnLoadCallback(drawBars);
+    google.charts.setOnLoadCallback(drawDonut);
+
+    var myColors = ['#d7d7d7', '#1e7278', '#e6693e', '#442359', '#e0aa0f'];
+
+    function drawBars() {
+      var data = google.visualization.arrayToDataTable([
+        ['%', 'E', {role: 'annotation'}, 'D', {role: 'annotation'}, 'C', {role: 'annotation'}, 'B', {role: 'annotation'}, 'A', {role: 'annotation'}],
+        ['%', 60, 'E', 10, 'D', 10, 'C', 10, 'B', 10, 'A'],
+      ]);
+      var options = {
+        title: 'Grading scale',
+        isStacked: true,
+        hAxis: {ticks: [0,10,20,30,40,50,60,70,80,90,100]},
+        animation: {startup: true, duration: 300},
+        width: 600,
+        height:160,
+        colors: myColors,
+        fontName: '"Helvetica Neue", Helvetica, Verdana, sans-serif',
+        titleTextStyle: {fontSize: 16, color: '#45274f'},
+        tooltip: {trigger: 'none'},
+        legend: {position: 'none'},
+      };
+      var chart = new google.visualization.BarChart(document.getElementById('bars'));
+      chart.draw(data, options);
+    }
+
+    function drawDonut() {
+      var data = google.visualization.arrayToDataTable([
+        ['What',    '%'],
+        ['HW',       10],
+        ['Quizzes',  20],
+        ['1st Exam', 20],
+        ['2nd Exam', 20],
+        ['Final',    30],
+      ]);
+      var options = {
+        pieSliceText: 'label',
+        pieHole: 0.4,
+        pieStartAngle: 324,
+        width: 360,
+        height:360,
+        colors: myColors,
+        fontName: '"Helvetica Neue", Helvetica, Verdana, sans-serif',
+        tooltip: {text: 'percentage'},
+        legend: {position: 'none'},
+      };
+      var chart = new google.visualization.PieChart(document.getElementById('donut'));
+      chart.draw(data, options);
+    }
+  </script>
+  <style>
+    .glow {
+      color: #fc4349;
+      -webkit-animation-name: glow;
+      -webkit-animation-duration: 1s;
+      -webkit-animation-iteration-count: infinite;
+      -webkit-animation-direction: alternate;
+    }
+    @-webkit-keyframes glow {
+        0% {color: black;}
+      100% {color: #fc4349;}
+    }
+  </style>
+</head>
+
+<body>
+
+<div id="masthead">
+<p><a href="https://www.albany.edu/cas/"><img alt="University at Albany, College of Arts and Sciences" src="../images/CASlogo.png"/></a></p>
+<p><a href="https://www.albany.edu/math/">Department of Mathematics and&nbsp;Statistics</a></p>
+</div>
+
+<h1 class="clear">AMAT 220: Linear Algebra, Spring&nbsp;2019</h1>
+
+<div id="main">
+
+<h2>Instructor</h2>
+<p>
+  Prof. <a href="https://www.albany.edu/~mv312143/">Marco Varisco</a>,
+  <a href="https://mleddy.blogspot.com/2005/01/how-to-e-mail-professor.html">mvarisco@albany.edu</a>
+  (<a class="printurl" href="https://mleddy.blogspot.com/2005/01/how-to-e-mail-professor.html">how to email a professor</a>),
+  <a href="https://www.albany.edu/~mv312143/">albany.edu/~mv312143</a><br/>
+  Office: <abbr title="Earth Science and Mathematics">ES</abbr>-120B,
+  <a class="printurl" href="https://www.youtube.com/watch?v=yQq1-_ujXrM">Office Hours</a>: TuTh&nbsp;10:05&ndash;11:15, or by appointment.
+</p>
+
+<h2>Schedule</h2>
+<p>
+  TuTh&nbsp;8:45&ndash;10:05 in <abbr title="Earth Science and Mathematics">ES</abbr>-143.
+</p>
+
+<h2>Description</h2>
+<p>
+  Introduction to linear algebra
+  (see the <a class="printurl" href="https://www.albany.edu/undergraduate_bulletin/a_mat.html">University Bulletin</a>).
+</p>
+<h3>Main topics</h3>
+<img style="width: 175px; height: 250px; float: right; margin: 0 0 .5em .5em; border: 1px solid; " alt="Textbook cover" src="cover.jpg"/>
+<ul>
+  <li>Systems of linear equations</li>
+  <li>Vectors and matrices</li>
+  <li>Vector spaces</li>
+  <li>Determinants</li>
+  <li>Eigenvalues and eigenvectors</li>
+  <li>Linear transformations</li>
+  <li>Orthogonality</li>
+</ul>
+
+<h2>Textbook</h2>
+<p>
+  <a href="https://www.pearson.com/us/higher-education/program/Lay-Linear-Algebra-and-Its-Applications-plus-New-My-Lab-Math-with-Pearson-e-Text-Access-Card-Package-5th-Edition/PGM2547338.html">
+  David    C.&nbsp;Lay,
+  with
+  Steven   R.&nbsp;Lay
+  and Judi J.&nbsp;McDonald,
+  <em>Linear&nbsp;Algebra and Its Applications</em>,
+  fifth edition, Pearson, 2016</a>.
+</p>
+<p>
+  You have the option to buy the textbook together with access to <a class="printurl" href="https://www.pearsonmylabandmastering.com/northamerica/mymathlab/">Pearson MyLab Math</a> &mdash; the online homework and grading system used for this course &mdash; or to buy only the access to MyLab Math.
+  Access to MyLab Math includes access to an electronic version of the textbook.
+</p>
+
+<div id="donut" style="float: right;"></div>
+<h2>Prerequisites</h2>
+<p>
+  AMAT&nbsp;113: Calculus&nbsp;II
+  (see the <a class="printurl" href="https://www.albany.edu/undergraduate_bulletin/a_mat.html">University Bulletin</a>).
+</p>
+
+<h2>Grading &amp; Examinations</h2>
+<ul>
+  <li>10% &mdash; Homework.</li>
+  <li>20% &mdash; Quizzes.</li>
+  <li>20% &mdash; First  Exam, Tuesday, March&nbsp;12, 8:45&ndash;10:05 in <abbr title="Earth Science and Mathematics">ES</abbr>-143.</li>
+  <li>20% &mdash; Second Exam, Thursday, April&nbsp;25, 8:45&ndash;10:05 in <abbr title="Earth Science and Mathematics">ES</abbr>-143.</li>
+  <li>30% &mdash; Final Exam, Thursday, May&nbsp;16, 10:30&ndash;12:30 in&nbsp;<abbr title="Earth Science and Mathematics">ES</abbr>-143.</li>
+</ul>
+<div id="bars"></div>
+<p>
+  Homework will be assigned regularly on <a class="printurl" href="https://www.pearsonmylabandmastering.com/northamerica/mymathlab/">Pearson MyLab Math</a> from the exercises in the textbook.
+  Beginning on Thursday, January&nbsp;24, you may enroll in our course on MyLab Math <a class="printurl" href="https://registration.mypearson.com/">here</a>.
+  The course ID is <strong>varisco92738</strong>.
+  You may then enter or purchase (for&nbsp;$103.95, including also the ebook) an access code, or start a free trial until February&nbsp;7.
+  Before February&nbsp;7 you will need to obtain an access code to continue using MyLab Math.
+  Be sure to check MyLab Math regularly for homework assignments as well as for all course announcements.
+  Do all the homework, and then some &mdash; mathematics is <strong>not</strong> a spectator sport!
+</p>
+<p>
+  Each class will begin with a quiz, mostly consisting of questions from the homework and statements of definitions/theorems.
+  The three lowest scores will be dropped, and no make-up quizzes will ever be given.
+</p>
+<p class="glow">
+  Please contact me as soon as possible if you cannot make one of the exams.
+  Retroactive or last-minute requests for a make-up exam or a reweighing of the examination grades will be ignored.
+</p>
+<p>
+  Reasonable accommodations will be provided for students with documented physical, sensory, systemic, medical, cognitive, learning, and mental health (psychiatric) disabilities.
+  If you believe you have a disability requiring accommodation in this class, please notify the <a href="https://www.albany.edu/disability/">Disability Resource Center</a> (<a href="mailto:drc@albany.edu">drc@albany.edu</a>).
+  Upon verification and after the registration process is complete, the DRC will provide you with a letter that informs me that you are a student with a disability registered with the DRC and lists the recommended reasonable accommodations.
+</p>
+<p>
+  Of course, you are expected to follow the University&rsquo;s <a class="printurl" href="https://www.albany.edu/undergraduate_bulletin/regulations.html">Standards of Academic Integrity</a> and <a class="printurl" href="https://www.albany.edu/health_center/medicalexcuse.shtml">Medical Excuse Policies</a>.
+  We refer to the <a class="printurl" href="https://www.albany.edu/undergraduate_bulletin/regulations.html">University Bulletin</a> for the policies on incomplete grades.
+</p>
+
+</div>
+<hr />
+
+<address>
+  This syllabus is subject to change. All official announcements and assignments are given in class, and this web page may not be up to date.
+</address>
+<address>
+ <a href="https://www.albany.edu/~mv312143/">Marco Varisco</a>
+  &mdash; <time datetime="2019-04-16">April&nbsp;16, 2019</time>.
+</address>
+
+</body>
+</html>
