@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Example</title>
+    <meta name="author" content="Marco Varisco">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="icon" type="image/png" href="/images/∇.png">
+    <style>
+      :root {
+        --bg:           #0c0c0c;
+        --surface:      #161616;
+        --border:       #272727;
+        --text:         #ece9e8;
+        --muted:        #9c978e;
+        --accent:       #ff2743;
+        --accent-glow:  rgba(255, 39, 67, 0.1);
+        --summary-pip:  #ff9fab;
+        --font-ui:      -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        --font-display: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+        --radius:       3px;
+      }
+
+      *, *::before, *::after { box-sizing: border-box; }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-ui);
+        min-height: 100vh;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding: 3rem 1rem;
+      }
+
+      .app {
+        width: 100%;
+        max-width: 600px;
+      }
+
+      .tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem 1.75rem;
+        margin-bottom: 1.25rem;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .tab {
+        background: none;
+        border: none;
+        border-bottom: 2px solid transparent;
+        margin-bottom: -1px;
+        padding: 0 0 0.8rem;
+        color: var(--muted);
+        font-family: var(--font-ui);
+        font-size: 0.7rem;
+        font-weight: 400;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: color 0.2s ease, border-color 0.2s ease;
+      }
+
+      .tab:hover { color: var(--text); }
+
+      .tab:focus-visible {
+        outline: none;
+        color: var(--text);
+      }
+
+      .tab.is-active {
+        color: var(--accent);
+        border-bottom-color: var(--accent);
+      }
+
+      .example {
+        width: 100%;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 2.5rem 2.5rem 2rem;
+      }
+
+      @media (min-width: 992px) {
+        .app { max-width: 1000px; }
+      }
+
+      /* divider between columns: a top rule when stacked, a left rule when side by side */
+      .example-details {
+        margin-top: 1.75rem;
+        padding-top: 1.75rem;
+        border-top: 1px solid var(--border);
+      }
+
+      @media (min-width: 992px) {
+        .example-details {
+          margin-top: 0;
+          padding-top: 0;
+          border-top: none;
+          border-left: 1px solid var(--border);
+        }
+      }
+
+      .example-title {
+        font-size: 1rem;
+        font-weight: 400;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin: 0 0 1.5rem;
+      }
+
+      .progress-track {
+        display: flex;
+        gap: 5px;
+        margin-bottom: 2.25rem;
+      }
+
+      .progress-pip {
+        flex: 1;
+        height: 2px;
+        background: var(--border);
+        border-radius: 99px;
+        transition: background 0.35s ease;
+      }
+
+      .progress-pip.filled { background: var(--accent); }
+
+      .progress-pip--summary {
+        flex: 0 0 1.25rem;
+        margin-left: 0.5rem;
+      }
+
+      .progress-pip--summary.filled { background: var(--summary-pip); }
+
+      .year-button-row {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .year {
+        font-size: clamp(2.25rem, 6vw, 3.75rem);
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        line-height: 1;
+        color: var(--text);
+        margin: 0;
+      }
+
+      .stat-card {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 1.25rem 1.5rem 1.4rem;
+        container-type: inline-size;
+      }
+
+      .stat-label {
+        font-size: 0.6rem;
+        font-weight: 400;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 0.5rem;
+      }
+
+      .stat-value {
+        font-family: var(--font-display);
+        font-size: clamp(1.6rem, 18cqi, 2.5rem); /* sized to the card so 6-digit figures fit */
+        font-weight: 700;
+        line-height: 1;
+        color: var(--text);
+        white-space: nowrap;
+      }
+
+      .stat-card--accent {
+        background: var(--accent-glow);
+        border-color: rgba(240, 34, 60, 0.25);
+      }
+
+      .stat-card--accent .stat-value { color: var(--accent); }
+
+      .details-log {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .details-log li {
+        display: flex;
+        align-items: baseline;
+        gap: 0.9rem;
+        padding: 0.7rem 0;
+        border-top: 1px solid var(--border);
+      }
+
+      .details-log li:first-child {
+        border-top: none;
+      }
+
+      .log-year {
+        flex: 0 0 3.5rem;
+        font-size: 0.85rem;
+        font-weight: 400;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+        white-space: nowrap;
+      }
+
+      .log-text {
+        flex: 1;
+        font-size: 1rem;
+        font-weight: 300;
+        line-height: 1.6;
+        color: var(--muted);
+        white-space: pre-line;
+        transition: color 0.4s ease;
+      }
+
+      .details-log li.current .log-text {
+        color: var(--text);
+      }
+
+      .summary-box {
+        margin-top: 1.75rem;
+        padding: 1.5rem 1.5rem 1.6rem;
+        background: var(--accent-glow);
+        border: 1px solid var(--accent);
+        border-radius: var(--radius);
+      }
+
+      .summary {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 300;
+        line-height: 1.6;
+        color: var(--text);
+        white-space: pre-line;
+      }
+
+      .subsummary {
+        margin: 0.85rem 0 0;
+        font-size: 0.85rem;
+        font-weight: 300;
+        line-height: 1.6;
+        color: var(--muted);
+        white-space: pre-line;
+      }
+
+      .action-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: transparent;
+        border: 1px solid var(--accent);
+        color: var(--accent);
+        font-family: var(--font-ui);
+        font-size: 0.65rem;
+        font-weight: 400;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        padding: 0.8rem 2.25rem;
+        cursor: pointer;
+        border-radius: var(--radius);
+        transition: background 0.2s ease, color 0.2s ease;
+        flex-shrink: 0;
+        transform: translateY(-1rem); /* drop the button’s bottom edge onto the year’s baseline */
+      }
+
+      .action-btn:hover,
+      .action-btn:focus-visible {
+        background: var(--accent);
+        color: var(--bg);
+        outline: none;
+      }
+
+      .action-btn.is-reset {
+        border-color: var(--muted);
+        color: var(--muted);
+      }
+
+      .action-btn.is-reset:hover,
+      .action-btn.is-reset:focus-visible {
+        background: var(--muted);
+        color: var(--bg);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <nav class="tabs" id="tabs" role="tablist" aria-label="Examples"></nav>
+
+      <div class="example" id="examplePanel" role="tabpanel" tabindex="0">
+        <div class="row gx-5">
+          <div class="col-12 col-lg-7 example-main">
+            <p class="example-title" id="exampleTitle"></p>
+
+            <div class="progress-track" id="progress">
+              <div class="progress-pip"></div>
+              <div class="progress-pip"></div>
+              <div class="progress-pip"></div>
+              <div class="progress-pip"></div>
+              <div class="progress-pip"></div>
+              <div class="progress-pip progress-pip--summary"></div>
+            </div>
+
+            <div class="year-button-row">
+              <h1 class="year" id="year"></h1>
+              <button class="action-btn" id="actionBtn">Advance &rarr;</button>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-12 col-sm-6">
+                <div class="stat-card stat-card--accent">
+                  <div class="stat-label">Salary</div>
+                  <div class="stat-value" id="salary"></div>
+                </div>
+              </div>
+              <div class="col-12 col-sm-6">
+                <div class="stat-card">
+                  <div class="stat-label">Extra</div>
+                  <div class="stat-value" id="extra"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="summary-box" id="summaryBox" hidden>
+              <p class="summary" id="summary"></p>
+              <p class="subsummary" id="subsummary"></p>
+            </div>
+          </div>
+
+          <div class="col-12 col-lg-5 example-details">
+            <ul class="details-log" id="detailsLog"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const DATA = [
+        {
+          label: "First Example",
+          title: "FT Academic hired in 2012",
+          year: [
+            "2025",
+            "2026",
+            "2027",
+            "2028",
+            "2029",
+            "2030"
+          ],
+          salary: [
+            "$76,000",
+            "$79,420",
+            "$83,297",
+            "$86,813",
+            "$90,768",
+            "$93,992"
+          ],
+          extra: [
+            "$0",
+            "$0",
+            "$600",
+            "$1,200",
+            "$1,800",
+            "$2,400"
+          ],
+          details: [
+            "Starting salary in 2025: $76,000 (the median UUP salary)",
+            "4.5% ATB raise",
+            "4.0% ATB raise + $450 DSI + $250 7yr retention award\n$600 higher ed differential (lump sum)",
+            "3.5% ATB raise + $250 7yr retention award + $350 12yr retention award\n$600 higher ed differential (lump sum)",
+            "3.0% ATB raise + $250 7yr retention award + $350 12yr retention award + $750 17yr retention award\n$600 higher ed differential (lump sum)",
+            "3.0% ATB raise + $500 cost of living differential\n$600 higher ed differential (lump sum)"
+          ],
+          summary: "Over the five years of the agreement:\n23.67% increase to base salary, plus $2,400 lump sum payments.",
+          subsummary: "Not included: additional DSIs (compounded), location / on-call / inconvenience pay, any IDA / Drescher / etc., statutory (not contractual) gains from Tier 6 fix, …."
+        },
+        {
+          label: "Second Example",
+          title: "Same as the other example for now",
+          year: [
+            "2025",
+            "2026",
+            "2027",
+            "2028",
+            "2029",
+            "2030"
+          ],
+          salary: [
+            "$76,000",
+            "$79,420",
+            "$83,297",
+            "$86,813",
+            "$90,768",
+            "$93,992"
+          ],
+          extra: [
+            "$0",
+            "$0",
+            "$600",
+            "$1,200",
+            "$1,800",
+            "$2,400"
+          ],
+          details: [
+            "Starting salary in 2025: $76,000 (the median UUP salary)",
+            "4.5% ATB raise",
+            "4.0% ATB raise + $450 DSI + $250 7yr retention award\n$600 higher ed differential (lump sum)",
+            "3.5% ATB raise + $250 7yr retention award + $350 12yr retention award\n$600 higher ed differential (lump sum)",
+            "3.0% ATB raise + $250 7yr retention award + $350 12yr retention award + $750 17yr retention award\n$600 higher ed differential (lump sum)",
+            "3.0% ATB raise + $500 cost of living differential\n$600 higher ed differential (lump sum)"
+          ],
+          summary: "Over the five years of the agreement:\n23.67% increase to base salary, plus $2,400 lump sum payments.",
+          subsummary: "Not included: additional DSIs (compounded), location / on-call / inconvenience pay, any IDA / Drescher / etc., statutory (not contractual) gains from Tier 6 fix, …."
+        }
+      ];
+
+      const MAX_YEAR       = 5;
+      const ANIM_DURATION  = 700;
+
+      let activeTab        = 0;
+      let currentYear      = 0;
+      let summaryShown     = false;
+      let D                = DATA[activeTab];
+
+      const elTabs         = document.getElementById("tabs");
+      const elPanel        = document.getElementById("examplePanel");
+      const elTitle        = document.getElementById("exampleTitle");
+      const elYear         = document.getElementById("year");
+      const elSalary       = document.getElementById("salary");
+      const elExtra        = document.getElementById("extra");
+      const elLog          = document.getElementById("detailsLog");
+      const elBtn          = document.getElementById("actionBtn");
+      const elPips         = document.querySelectorAll("#progress .progress-pip");
+      const elSummaryBox   = document.getElementById("summaryBox");
+      const elSummary      = document.getElementById("summary");
+      const elSubsummary   = document.getElementById("subsummary");
+
+      const parseCurrency  = str => parseInt(str.replace(/[$,]/g, ""), 10);
+      const formatCurrency = n   => "$" + n.toLocaleString("en-US");
+
+      // number animation: count from → to with a cubic ease-out
+      // adapted from codepen.io/duvander/pen/KXOpXw
+      function animateNumber(element, from, to, formatter) {
+        if (element._rafId) { cancelAnimationFrame(element._rafId); element._rafId = null; }
+        if (from === to) { element.textContent = formatter(to); return; }
+
+        const start = performance.now();
+        function tick(now) {
+          const progress = Math.min((now - start) / ANIM_DURATION, 1);
+          const eased    = 1 - Math.pow(1 - progress, 3);
+          element.textContent = formatter(Math.round(from + (to - from) * eased));
+          element._rafId = progress < 1 ? requestAnimationFrame(tick) : null;
+        }
+        element._rafId = requestAnimationFrame(tick);
+      }
+
+      function makeLogItem(year, isCurrent) {
+        const li = document.createElement("li");
+        if (isCurrent) li.classList.add("current");
+
+        const label = document.createElement("span");
+        label.className = "log-year";
+        label.textContent = D.year[year];
+
+        const text = document.createElement("span");
+        text.className = "log-text";
+        text.textContent = D.details[year];
+
+        li.append(label, text);
+        return li;
+      }
+
+      function clearLog() {
+        elLog.innerHTML = "";
+      }
+
+      function resetLog(year) {
+        clearLog();
+        const li = makeLogItem(year, true);
+        elLog.appendChild(li);
+        li.animate([{ opacity: 0 }, { opacity: 1 }], { duration: ANIM_DURATION * 0.5, easing: "ease" });
+      }
+
+      // prepend the new current row; slide the existing rows down (FLIP)
+      function advanceLog(year) {
+        const items     = Array.from(elLog.children);
+        const firstTops = items.map(el => el.getBoundingClientRect().top);
+
+        const cur = elLog.querySelector("li.current");
+        if (cur) cur.classList.remove("current");
+
+        const li = makeLogItem(year, true);
+        elLog.prepend(li);
+
+        items.forEach((el, i) => {
+          const delta = firstTops[i] - el.getBoundingClientRect().top;
+          if (delta) {
+            el.animate(
+              [{ transform: `translateY(${delta}px)` }, { transform: "translateY(0)" }],
+              { duration: ANIM_DURATION * 0.5, easing: "ease" }
+            );
+          }
+        });
+
+        li.animate(
+          [{ opacity: 0, transform: "translateY(-8px)" }, { opacity: 1, transform: "translateY(0)" }],
+          { duration: ANIM_DURATION * 0.5, delay: ANIM_DURATION * 0.3, easing: "ease", fill: "backwards" }
+        );
+      }
+
+      function showSummary() {
+        elSummary.textContent    = D.summary;
+        elSubsummary.textContent = D.subsummary;
+        elSummaryBox.hidden = false;
+        elSummaryBox.animate(
+          [{ opacity: 0, transform: "translateY(12px)" }, { opacity: 1, transform: "translateY(0)" }],
+          { duration: ANIM_DURATION * 0.5, delay: ANIM_DURATION * 0.1, easing: "ease", fill: "backwards" }
+        );
+      }
+
+      function hideSummary() {
+        elSummaryBox.hidden = true;
+      }
+
+      function render(prevYear, action) {
+        elTitle.textContent = D.title;
+        elYear.textContent  = D.year[currentYear];
+
+        const fromSalary = parseCurrency(D.salary[prevYear ?? currentYear]);
+        const fromExtra  = parseCurrency(D.extra [prevYear ?? currentYear]);
+        animateNumber(elSalary, fromSalary, parseCurrency(D.salary[currentYear]), formatCurrency);
+        animateNumber(elExtra,  fromExtra,  parseCurrency(D.extra [currentYear]), formatCurrency);
+
+        if (action === "advance")                          advanceLog(currentYear);
+        else if (action === "init" || action === "reset")  resetLog(currentYear);
+
+        if (action === "summarize") showSummary();
+        else                        hideSummary();
+
+        elPips.forEach((pip, i) => {
+          const on = pip.classList.contains("progress-pip--summary") ? summaryShown : i < currentYear;
+          pip.classList.toggle("filled", on);
+        });
+
+        elBtn.innerHTML = summaryShown ? "&#x21BA; Reset" : "Advance &rarr;";
+        elBtn.classList.toggle("is-reset", summaryShown);
+      }
+
+      elBtn.addEventListener("click", () => {
+        if (currentYear < MAX_YEAR) {
+          const prevYear = currentYear;
+          currentYear++;
+          render(prevYear, "advance");
+        } else if (!summaryShown) {
+          summaryShown = true;
+          render(currentYear, "summarize");
+        } else {
+          const prevYear = currentYear;
+          currentYear = 0;
+          summaryShown = false;
+          render(prevYear, "reset");
+        }
+      });
+
+      function buildTabs() {
+        elTabs.innerHTML = "";
+        DATA.forEach((d, i) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "tab" + (i === activeTab ? " is-active" : "");
+          btn.id = "tab-" + i;
+          btn.textContent = d.label;
+          btn.dataset.tab = i;
+          btn.setAttribute("role", "tab");
+          btn.setAttribute("aria-controls", "examplePanel");
+          btn.setAttribute("aria-selected", i === activeTab ? "true" : "false");
+          btn.tabIndex = i === activeTab ? 0 : -1;
+          elTabs.appendChild(btn);
+        });
+        syncPanel();
+      }
+
+      function syncTabStates() {
+        Array.from(elTabs.children).forEach((t, i) => {
+          const active = i === activeTab;
+          t.classList.toggle("is-active", active);
+          t.setAttribute("aria-selected", active ? "true" : "false");
+          t.tabIndex = active ? 0 : -1;
+        });
+        syncPanel();
+      }
+
+      function syncPanel() {
+        elPanel.setAttribute("aria-labelledby", "tab-" + activeTab);
+      }
+
+      function selectTab(idx) {
+        if (idx === activeTab) return;
+        activeTab = idx;
+        D = DATA[activeTab];
+        currentYear = 0;
+        summaryShown = false;
+        syncTabStates();
+        render(undefined, "init");
+      }
+
+      elTabs.addEventListener("click", e => {
+        const btn = e.target.closest(".tab");
+        if (btn) selectTab(Number(btn.dataset.tab));
+      });
+
+      elTabs.addEventListener("keydown", e => {
+        let idx;
+        if (e.key === "ArrowRight")     idx = (activeTab + 1) % DATA.length;
+        else if (e.key === "ArrowLeft") idx = (activeTab - 1 + DATA.length) % DATA.length;
+        else if (e.key === "Home")      idx = 0;
+        else if (e.key === "End")       idx = DATA.length - 1;
+        else return;
+
+        e.preventDefault();
+        selectTab(idx);
+        elTabs.children[idx].focus();
+      });
+
+      buildTabs();
+      render(undefined, "init");
+
+      elBtn.focus({ focusVisible: false, preventScroll: true });
+      // focus the button so Enter advances immediately, but without the focus-visible (filled) styling that the autofocus attribute triggers
+    </script>
+  </body>
+</html>
