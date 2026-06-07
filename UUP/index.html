@@ -511,6 +511,9 @@
       }
 
       function showSummary() {
+        const cur = elLog.querySelector("li.current");
+        if (cur) cur.classList.remove("current");
+
         elSummary.innerHTML    = formatText(D.summary);
         elSubsummary.innerHTML = formatText(D.subsummary);
         elSummaryBox.hidden = false;
