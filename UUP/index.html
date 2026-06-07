@@ -350,6 +350,7 @@
       const YEARS = [ "2025", "2026", "2027", "2028", "2029", "2030" ];
       const DATA = [
         {
+          slug: "first",
           label: "First Example",
           title: "FT Academic hired in 2012",
           year: YEARS,
@@ -381,6 +382,7 @@
           subsummary: "*Not included:* additional DSIs (compounded), location / on-call / inconvenience pay, any IDA / Drescher / etc., statutory (not contractual) gains from Tier 6 fix, …."
         },
         {
+          slug: "second",
           label: "Second Example",
           title: "Same as the other example for now",
           year: YEARS,
@@ -607,6 +609,7 @@
         summaryShown = false;
         syncTabStates();
         render(undefined, "init");
+        history.replaceState(null, "", "?s=" + D.slug);
       }
 
       elTabs.addEventListener("click", e => {
@@ -629,6 +632,12 @@
 
       buildTabs();
       render(undefined, "init");
+
+      const initSlug = new URLSearchParams(window.location.search).get("s");
+      if (initSlug) {
+        const idx = DATA.findIndex(d => d.slug === initSlug);
+        if (idx !== -1 && idx !== activeTab) selectTab(idx);
+      }
 
       elBtn.focus({ focusVisible: false, preventScroll: true });
       // focus the button so Enter advances immediately, but without the focus-visible (filled) styling that the autofocus attribute triggers
