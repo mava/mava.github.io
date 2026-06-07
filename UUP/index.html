@@ -9,17 +9,18 @@
     <link rel="icon" type="image/png" href="/images/∇.png">
     <style>
       :root {
-        --bg:           #0c0c0c;
-        --surface:      #161616;
-        --border:       #272727;
-        --text:         #ece9e8;
-        --muted:        #9c978e;
-        --accent:       #ff2743;
-        --accent-glow:  rgba(255, 39, 67, 0.1);
-        --summary-pip:  #ff9fab;
-        --font-ui:      -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        --font-display: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-        --radius:       3px;
+        --bg:            #0c0c0c;
+        --surface:       #161616;
+        --border:        #272727;
+        --text:          #ece9e8;
+        --muted:         #9c978e;
+        --accent:        #ff2743;
+        --accent-glow:   rgba(255, 39, 67, 0.1);
+        --accent-border: rgba(255, 39, 67, 0.25);
+        --summary-pip:   #ff9fab;
+        --font-ui:       system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        --font-display:  ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+        --radius:        3px;
       }
 
       *, *::before, *::after { box-sizing: border-box; }
@@ -183,7 +184,7 @@
 
       .stat-card--accent {
         background: var(--accent-glow);
-        border-color: rgba(240, 34, 60, 0.25);
+        border-color: var(--accent-border);
       }
 
       .stat-card--accent .stat-value { color: var(--accent); }
@@ -259,7 +260,6 @@
       .action-btn {
         display: inline-flex;
         align-items: center;
-        gap: 0.5rem;
         background: transparent;
         border: 1px solid var(--accent);
         color: var(--accent);
@@ -304,14 +304,7 @@
           <div class="col-12 col-lg-7 example-main">
             <p class="example-title" id="exampleTitle"></p>
 
-            <div class="progress-track" id="progress">
-              <div class="progress-pip"></div>
-              <div class="progress-pip"></div>
-              <div class="progress-pip"></div>
-              <div class="progress-pip"></div>
-              <div class="progress-pip"></div>
-              <div class="progress-pip progress-pip--summary"></div>
-            </div>
+            <div class="progress-track" id="progress"></div>
 
             <div class="year-button-row">
               <h1 class="year" id="year"></h1>
@@ -353,7 +346,6 @@
           slug: "first",
           label: "First Example",
           title: "FT Academic hired in 2012",
-          year: YEARS,
           salary: [
             "$76,000",
             "$79,420",
@@ -385,7 +377,6 @@
           slug: "second",
           label: "Second Example",
           title: "Same as the other example for now",
-          year: YEARS,
           salary: [
             "$76,000",
             "$79,420",
@@ -415,7 +406,7 @@
         }
       ];
 
-      const MAX_YEAR       = 5;
+      const MAX_YEAR       = YEARS.length - 1;
       const ANIM_DURATION  = 700;
 
       let activeTab        = 0;
@@ -431,7 +422,8 @@
       const elExtra        = document.getElementById("extra");
       const elLog          = document.getElementById("detailsLog");
       const elBtn          = document.getElementById("actionBtn");
-      const elPips         = document.querySelectorAll("#progress .progress-pip");
+      const elProgress     = document.getElementById("progress");
+      let   elPips;       // assigned by buildPips()
       const elSummaryBox   = document.getElementById("summaryBox");
       const elSummary      = document.getElementById("summary");
       const elSubsummary   = document.getElementById("subsummary");
@@ -442,11 +434,16 @@
                                       .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
                                       .replace(/\*([^*]+)\*/g,     '<em>$1</em>');
 
-      // number animation: count from → to with a cubic ease-out
-      // adapted from codepen.io/duvander/pen/KXOpXw
-      function animateNumber(element, from, to, formatter) {
+      // number animation — adapted from codepen.io/duvander/pen/KXOpXw
+      // count from the currently-displayed value → to, with a cubic ease-out
+      function animateNumber(element, to, formatter, instant) {
         if (element._rafId) { cancelAnimationFrame(element._rafId); element._rafId = null; }
-        if (from === to) { element.textContent = formatter(to); return; }
+
+        const from = parseCurrency(element.textContent);
+        if (instant || Number.isNaN(from) || from === to) {
+          element.textContent = formatter(to);
+          return;
+        }
 
         const start = performance.now();
         function tick(now) {
@@ -464,7 +461,7 @@
 
         const label = document.createElement("span");
         label.className = "log-year";
-        label.textContent = D.year[year];
+        label.textContent = YEARS[year];
 
         const text = document.createElement("span");
         text.className = "log-text";
@@ -529,14 +526,13 @@
         elSummaryBox.hidden = true;
       }
 
-      function render(prevYear, action) {
+      function render(action) {
         elTitle.textContent = D.title;
-        elYear.textContent  = D.year[currentYear];
+        elYear.textContent  = YEARS[currentYear];
 
-        const fromSalary = parseCurrency(D.salary[prevYear ?? currentYear]);
-        const fromExtra  = parseCurrency(D.extra [prevYear ?? currentYear]);
-        animateNumber(elSalary, fromSalary, parseCurrency(D.salary[currentYear]), formatCurrency);
-        animateNumber(elExtra,  fromExtra,  parseCurrency(D.extra [currentYear]), formatCurrency);
+        const instant = action === "init";
+        animateNumber(elSalary, parseCurrency(D.salary[currentYear]), formatCurrency, instant);
+        animateNumber(elExtra,  parseCurrency(D.extra [currentYear]), formatCurrency, instant);
 
         if (action === "advance")                          advanceLog(currentYear);
         else if (action === "init" || action === "reset")  resetLog(currentYear);
@@ -555,19 +551,30 @@
 
       elBtn.addEventListener("click", () => {
         if (currentYear < MAX_YEAR) {
-          const prevYear = currentYear;
           currentYear++;
-          render(prevYear, "advance");
+          render("advance");
         } else if (!summaryShown) {
           summaryShown = true;
-          render(currentYear, "summarize");
+          render("summarize");
         } else {
-          const prevYear = currentYear;
           currentYear = 0;
           summaryShown = false;
-          render(prevYear, "reset");
+          render("reset");
         }
       });
+
+      function buildPips() {
+        elProgress.innerHTML = "";
+        for (let i = 0; i < MAX_YEAR; i++) {
+          const pip = document.createElement("div");
+          pip.className = "progress-pip";
+          elProgress.appendChild(pip);
+        }
+        const summaryPip = document.createElement("div");
+        summaryPip.className = "progress-pip progress-pip--summary";
+        elProgress.appendChild(summaryPip);
+        elPips = elProgress.querySelectorAll(".progress-pip");
+      }
 
       function buildTabs() {
         elTabs.innerHTML = "";
@@ -608,7 +615,7 @@
         currentYear = 0;
         summaryShown = false;
         syncTabStates();
-        render(undefined, "init");
+        render("init");
         history.replaceState(null, "", "?s=" + D.slug);
       }
 
@@ -630,17 +637,17 @@
         elTabs.children[idx].focus();
       });
 
+      // resolve the initial tab from the URL before the first render
+      const initSlug = new URLSearchParams(location.search).get("s");
+      const initIdx  = DATA.findIndex(d => d.slug === initSlug);
+      if (initIdx > 0) { activeTab = initIdx; D = DATA[activeTab]; }
+
+      buildPips();
       buildTabs();
-      render(undefined, "init");
+      render("init");
 
-      const initSlug = new URLSearchParams(window.location.search).get("s");
-      if (initSlug) {
-        const idx = DATA.findIndex(d => d.slug === initSlug);
-        if (idx !== -1 && idx !== activeTab) selectTab(idx);
-      }
-
-      elBtn.focus({ focusVisible: false, preventScroll: true });
-      // focus the button so Enter advances immediately, but without the focus-visible (filled) styling that the autofocus attribute triggers
+      // focus the button so Enter advances immediately; programmatic focus avoids the focus-visible (filled) ring that the autofocus attribute triggers
+      elBtn.focus({ preventScroll: true });
     </script>
   </body>
 </html>
