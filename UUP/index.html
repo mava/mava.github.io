@@ -17,7 +17,7 @@
         --accent:        #ff2743;
         --accent-glow:   rgba(255, 39, 67, 0.1);
         --accent-border: rgba(255, 39, 67, 0.25);
-        --summary-pip:   #ff9fab;
+        --accent-muted:  #d4778a;
         --font-ui:       system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         --font-display:  ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
         --radius:        3px;
@@ -37,6 +37,12 @@
       }
       
       strong { font-weight: 700; }
+
+      .tab:focus-visible,
+      .action-btn:focus-visible {
+        outline: 2px solid var(--accent-muted);
+        outline-offset: 5px;
+      }
 
       .app {
         width: 100%;
@@ -60,7 +66,6 @@
         color: var(--muted);
         font-family: var(--font-ui);
         font-size: 0.7rem;
-        font-weight: 400;
         letter-spacing: 0.18em;
         text-transform: uppercase;
         cursor: pointer;
@@ -70,25 +75,19 @@
       .tab:hover { color: var(--text); }
 
       .tab:focus-visible {
-        outline: none;
         color: var(--text);
       }
-
+      
       .tab.is-active {
         color: var(--accent);
         border-bottom-color: var(--accent);
       }
 
       .example {
-        width: 100%;
         background: var(--surface);
         border: 1px solid var(--border);
         border-radius: var(--radius);
         padding: 2.5rem 2.5rem 2rem;
-      }
-
-      @media (min-width: 992px) {
-        .app { max-width: 1000px; }
       }
 
       /* divider between columns: a top rule when stacked, a left rule when side by side */
@@ -99,6 +98,8 @@
       }
 
       @media (min-width: 992px) {
+        .app { max-width: 1000px; }
+
         .example-details {
           margin-top: 0;
           padding-top: 0;
@@ -137,7 +138,7 @@
         margin-left: 0.5rem;
       }
 
-      .progress-pip--summary.filled { background: var(--summary-pip); }
+      .progress-pip--summary.filled { background: var(--accent-muted); }
 
       .year-button-row {
         display: flex;
@@ -166,7 +167,6 @@
 
       .stat-label {
         font-size: 0.6rem;
-        font-weight: 400;
         letter-spacing: 0.22em;
         text-transform: uppercase;
         color: var(--muted);
@@ -210,7 +210,6 @@
       .log-year {
         flex: 0 0 3.5rem;
         font-size: 0.85rem;
-        font-weight: 400;
         letter-spacing: 0.12em;
         text-transform: uppercase;
         color: var(--accent);
@@ -265,7 +264,6 @@
         color: var(--accent);
         font-family: var(--font-ui);
         font-size: 0.65rem;
-        font-weight: 400;
         letter-spacing: 0.22em;
         text-transform: uppercase;
         padding: 0.8rem 2.25rem;
@@ -280,7 +278,6 @@
       .action-btn:focus-visible {
         background: var(--accent);
         color: var(--bg);
-        outline: none;
       }
 
       .action-btn.is-reset {
@@ -302,12 +299,12 @@
       <div class="example" id="examplePanel" role="tabpanel" tabindex="0">
         <div class="row gx-5">
           <div class="col-12 col-lg-7 example-main">
-            <p class="example-title" id="exampleTitle"></p>
+            <h1 class="example-title" id="exampleTitle"></h1>
 
-            <div class="progress-track" id="progress"></div>
+            <div class="progress-track" id="progress" aria-hidden="true"></div>
 
             <div class="year-button-row">
-              <h1 class="year" id="year"></h1>
+              <p class="year" id="year"></p>
               <button class="action-btn" id="actionBtn">Advance &rarr;</button>
             </div>
 
@@ -436,8 +433,10 @@
 
       // number animation — adapted from codepen.io/duvander/pen/KXOpXw
       // count from the currently-displayed value → to, with a cubic ease-out
+      const rafIds = new WeakMap();
       function animateNumber(element, to, formatter, instant) {
-        if (element._rafId) { cancelAnimationFrame(element._rafId); element._rafId = null; }
+        const prev = rafIds.get(element);
+        if (prev) { cancelAnimationFrame(prev); rafIds.delete(element); }
 
         const from = parseCurrency(element.textContent);
         if (instant || Number.isNaN(from) || from === to) {
@@ -450,9 +449,10 @@
           const progress = Math.min((now - start) / ANIM_DURATION, 1);
           const eased    = 1 - Math.pow(1 - progress, 3);
           element.textContent = formatter(Math.round(from + (to - from) * eased));
-          element._rafId = progress < 1 ? requestAnimationFrame(tick) : null;
+          if (progress < 1) rafIds.set(element, requestAnimationFrame(tick));
+          else              rafIds.delete(element);
         }
-        element._rafId = requestAnimationFrame(tick);
+        rafIds.set(element, requestAnimationFrame(tick));
       }
 
       function makeLogItem(year, isCurrent) {
@@ -646,8 +646,15 @@
       buildTabs();
       render("init");
 
-      // focus the button so Enter advances immediately; programmatic focus avoids the focus-visible (filled) ring that the autofocus attribute triggers
-      elBtn.focus({ preventScroll: true });
+      document.addEventListener("keydown", e => {
+        if (e.key !== "Enter") return;
+        if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+        const t = e.target;
+        if (t instanceof Element &&
+            t.closest("button, a, input, select, textarea, [contenteditable]")) return;
+        e.preventDefault();
+        elBtn.click();
+      });
     </script>
   </body>
 </html>
