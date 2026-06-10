@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Examples</title>
     <meta name="author" content="Marco Varisco">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="icon" type="image/png" href="/images/∇.png">
     <style>
       :root {
@@ -26,9 +25,12 @@
       *, *::before, *::after { box-sizing: border-box; }
 
       body {
+        margin: 0;
         background: var(--bg);
         color: var(--text);
         font-family: var(--font-ui);
+        line-height: 1.5;
+        -webkit-text-size-adjust: 100%;
         min-height: 100vh;
         display: flex;
         align-items: flex-start;
@@ -36,6 +38,8 @@
         padding: 3rem 1rem;
       }
       
+      button { font: inherit; }
+
       strong { font-weight: 700; }
 
       .tab:focus-visible,
@@ -72,8 +76,7 @@
         transition: color 0.2s ease, border-color 0.2s ease;
       }
 
-      .tab:hover { color: var(--text); }
-
+      .tab:hover,
       .tab:focus-visible {
         color: var(--text);
       }
@@ -90,6 +93,9 @@
         padding: 2.5rem 2.5rem 2rem;
       }
 
+      .example-grid { margin: 0 -1.5rem; }
+      .example-grid > * { padding: 0 1.5rem; }
+
       /* divider between columns: a top rule when stacked, a left rule when side by side */
       .example-details {
         margin-top: 1.75rem;
@@ -99,6 +105,11 @@
 
       @media (min-width: 992px) {
         .app { max-width: 1000px; }
+
+        .example-grid {
+          display: grid;
+          grid-template-columns: 7fr 5fr;
+        }
 
         .example-details {
           margin-top: 0;
@@ -157,6 +168,15 @@
         margin: 0;
       }
 
+      .stat-grid {
+        display: grid;
+        gap: 1rem;
+      }
+
+      @media (min-width: 576px) {
+        .stat-grid { grid-template-columns: 1fr 1fr; }
+      }
+
       .stat-card {
         background: var(--bg);
         border: 1px solid var(--border);
@@ -203,9 +223,7 @@
         border-top: 1px solid var(--border);
       }
 
-      .details-log li:first-child {
-        border-top: none;
-      }
+      .details-log li:first-child { border-top: none; }
 
       .log-year {
         flex: 0 0 3.5rem;
@@ -226,9 +244,7 @@
         transition: color 0.4s ease;
       }
 
-      .details-log li.current .log-text {
-        color: var(--text);
-      }
+      .details-log li.current .log-text { color: var(--text); }
 
       .summary-box {
         margin-top: 1.75rem;
@@ -297,8 +313,8 @@
       <nav class="tabs" id="tabs" role="tablist" aria-label="Examples"></nav>
 
       <div class="example" id="examplePanel" role="tabpanel" tabindex="0">
-        <div class="row gx-5">
-          <div class="col-12 col-lg-7 example-main">
+        <div class="example-grid">
+          <div class="example-main">
             <h1 class="example-title" id="exampleTitle"></h1>
 
             <div class="progress-track" id="progress" aria-hidden="true"></div>
@@ -308,20 +324,16 @@
               <button class="action-btn" id="actionBtn">Advance &rarr;</button>
             </div>
 
-            <div class="row g-3">
-              <div class="col-12 col-sm-6">
+            <div class="stat-grid">
                 <div class="stat-card stat-card--accent">
                   <div class="stat-label">Salary</div>
                   <div class="stat-value" id="salary"></div>
                 </div>
-              </div>
-              <div class="col-12 col-sm-6">
                 <div class="stat-card">
                   <div class="stat-label">Extra</div>
                   <div class="stat-value" id="extra"></div>
                 </div>
               </div>
-            </div>
 
             <div class="summary-box" id="summaryBox" hidden>
               <p class="summary" id="summary"></p>
@@ -329,7 +341,7 @@
             </div>
           </div>
 
-          <div class="col-12 col-lg-5 example-details">
+          <div class="example-details">
             <ul class="details-log" id="detailsLog"></ul>
           </div>
         </div>
