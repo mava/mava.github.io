@@ -5,21 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Examples</title>
     <meta name="author" content="Marco Varisco">
-    <link rel="icon" type="image/png" href="/images/∇.png">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#0c0c0c">
+    <link rel="icon" type="image/png" href="/images/%E2%88%87.png">
     <style>
       :root {
         --bg:            #0c0c0c;
         --surface:       #161616;
         --border:        #272727;
+        --track:         #3a3a3a;
         --text:          #ece9e8;
         --muted:         #9c978e;
         --accent:        #ff2743;
         --accent-glow:   rgba(255, 39, 67, 0.1);
         --accent-border: rgba(255, 39, 67, 0.25);
         --accent-muted:  #d4778a;
+        --beat:          350ms; /* read by JS, accepts either ms or s, bare number = ms */
+        --radius:        3px;
         --font-ui:       system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         --font-display:  ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-        --radius:        3px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        :root { --beat: 0ms; }
       }
 
       *, *::before, *::after { box-sizing: border-box; }
@@ -31,21 +39,22 @@
         font-family: var(--font-ui);
         line-height: 1.5;
         -webkit-text-size-adjust: 100%;
-        min-height: 100vh;
+        text-size-adjust: 100%;
+        min-height: 100vh; /* fallback */
+        min-height: 100dvh;
         display: flex;
         align-items: flex-start;
         justify-content: center;
         padding: 3rem 1rem;
       }
-      
+
       button { font: inherit; }
 
       strong { font-weight: 700; }
 
-      .tab:focus-visible,
-      .action-btn:focus-visible {
-        outline: 2px solid var(--accent-muted);
-        outline-offset: 5px;
+      ::selection {
+        background: var(--accent-muted);
+        color: var(--bg);
       }
 
       .app {
@@ -55,32 +64,43 @@
 
       .tabs {
         display: flex;
-        flex-wrap: wrap;
-        gap: 0.25rem 1.75rem;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        scrollbar-width: thin;
+        scrollbar-color: var(--track) transparent;
+        scroll-snap-type: x proximity;
+        gap: 1.75rem;
         margin-bottom: 1.25rem;
-        border-bottom: 1px solid var(--border);
+        box-shadow: inset 0 -1px 0 var(--border);
       }
 
       .tab {
+        flex-shrink: 0;
+        white-space: nowrap;
+        scroll-snap-align: start;
         background: none;
         border: none;
         border-bottom: 2px solid transparent;
-        margin-bottom: -1px;
-        padding: 0 0 0.8rem;
+        padding: 0.4rem 0 0.8rem;
         color: var(--muted);
-        font-family: var(--font-ui);
-        font-size: 0.7rem;
-        letter-spacing: 0.18em;
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
         text-transform: uppercase;
         cursor: pointer;
         transition: color 0.2s ease, border-color 0.2s ease;
       }
 
-      .tab:hover,
+      @media (hover: hover) {
+        .tab:hover { color: var(--text); }
+      }
+
       .tab:focus-visible {
+        outline: 2px solid var(--accent-muted);
+        outline-offset: -2px;
         color: var(--text);
       }
-      
+
       .tab.is-active {
         color: var(--accent);
         border-bottom-color: var(--accent);
@@ -90,10 +110,10 @@
         background: var(--surface);
         border: 1px solid var(--border);
         border-radius: var(--radius);
-        padding: 2.5rem 2.5rem 2rem;
+        padding: 1.5rem;
       }
 
-      .example-grid { margin: 0 -1.5rem; }
+      .example-grid     { margin: 0 -1.5rem; }
       .example-grid > * { padding: 0 1.5rem; }
 
       /* divider between columns: a top rule when stacked, a left rule when side by side */
@@ -121,9 +141,10 @@
 
       .example-title {
         font-size: 1rem;
-        font-weight: 400;
-        letter-spacing: 0.28em;
+        font-weight: 400; /* instead of bold on h1 */
+        letter-spacing: 0.2em;
         text-transform: uppercase;
+        text-wrap: balance;
         color: var(--accent);
         margin: 0 0 1.5rem;
       }
@@ -136,10 +157,10 @@
 
       .progress-pip {
         flex: 1;
-        height: 2px;
-        background: var(--border);
+        height: 3px;
+        background: var(--track);
         border-radius: 99px;
-        transition: background 0.35s ease;
+        transition: background-color var(--beat) ease;
       }
 
       .progress-pip.filled { background: var(--accent); }
@@ -153,16 +174,18 @@
 
       .year-button-row {
         display: flex;
-        align-items: baseline;
+        flex-wrap: wrap;
+        align-items: center;
         justify-content: space-between;
         gap: 1rem;
         margin-bottom: 2rem;
       }
 
       .year {
-        font-size: clamp(2.25rem, 6vw, 3.75rem);
+        font-family: var(--font-display);
+        font-size: 3rem;
+        font-variant-numeric: tabular-nums;
         font-weight: 700;
-        letter-spacing: -0.02em;
         line-height: 1;
         color: var(--text);
         margin: 0;
@@ -186,7 +209,7 @@
       }
 
       .stat-label {
-        font-size: 0.6rem;
+        font-size: 0.75rem;
         letter-spacing: 0.22em;
         text-transform: uppercase;
         color: var(--muted);
@@ -195,7 +218,9 @@
 
       .stat-value {
         font-family: var(--font-display);
+        font-size: clamp(1.6rem, 7vw, 2.5rem);   /* fallback */
         font-size: clamp(1.6rem, 18cqi, 2.5rem); /* sized to the card so 6-digit figures fit */
+        font-variant-numeric: tabular-nums;
         font-weight: 700;
         line-height: 1;
         color: var(--text);
@@ -229,7 +254,6 @@
         flex: 0 0 3.5rem;
         font-size: 0.85rem;
         letter-spacing: 0.12em;
-        text-transform: uppercase;
         color: var(--accent);
         white-space: nowrap;
       }
@@ -237,11 +261,10 @@
       .log-text {
         flex: 1;
         font-size: 1rem;
-        font-weight: 300;
         line-height: 1.6;
         color: var(--muted);
         white-space: pre-line;
-        transition: color 0.4s ease;
+        transition: color var(--beat) ease;
       }
 
       .details-log li.current .log-text { color: var(--text); }
@@ -257,7 +280,6 @@
       .summary {
         margin: 0;
         font-size: 1rem;
-        font-weight: 300;
         line-height: 1.6;
         color: var(--text);
         white-space: pre-line;
@@ -266,43 +288,73 @@
       .subsummary {
         margin: 0.85rem 0 0;
         font-size: 0.85rem;
-        font-weight: 300;
         line-height: 1.6;
         color: var(--muted);
         white-space: pre-line;
       }
 
       .action-btn {
-        display: inline-flex;
+        display: inline-grid;
+        justify-items: center;
         align-items: center;
         background: transparent;
         border: 1px solid var(--accent);
         color: var(--accent);
-        font-family: var(--font-ui);
-        font-size: 0.65rem;
+        font-size: 0.75rem;
         letter-spacing: 0.22em;
         text-transform: uppercase;
-        padding: 0.8rem 2.25rem;
+        padding: 0.8rem 1.5rem;
         cursor: pointer;
         border-radius: var(--radius);
         transition: background 0.2s ease, color 0.2s ease;
         flex-shrink: 0;
-        transform: translateY(-1rem); /* drop the button’s bottom edge onto the year’s baseline */
       }
 
-      .action-btn:hover,
+      .btn-label {
+        grid-area: 1 / 1;
+        white-space: nowrap;
+        visibility: hidden;
+      }
+
+      .action-btn[data-state="advance"] .btn-label--advance,
+      .action-btn[data-state="summary"] .btn-label--summary,
+      .action-btn[data-state="reset"]   .btn-label--reset   { visibility: visible; }
+
+      @media (hover: hover) {
+        .action-btn:hover {
+          background: var(--accent);
+          color: var(--bg);
+        }
+
+        .action-btn[data-state="reset"]:hover {
+          background: var(--muted);
+          color: var(--bg);
+        }
+      }
+
       .action-btn:focus-visible {
+        outline: 2px solid var(--accent-muted);
+        outline-offset: 5px;
         background: var(--accent);
         color: var(--bg);
       }
 
-      .action-btn.is-reset {
+      .action-btn[data-state="reset"] {
         border-color: var(--muted);
         color: var(--muted);
       }
 
-      .action-btn.is-reset:hover,
-      .action-btn.is-reset:focus-visible {
+      .action-btn[data-state="reset"]:focus-visible {
+        background: var(--muted);
+        color: var(--bg);
+      }
+
+      .action-btn:active {
+        background: var(--accent);
+        color: var(--bg);
+      }
+
+      .action-btn[data-state="reset"]:active {
         background: var(--muted);
         color: var(--bg);
       }
@@ -310,7 +362,7 @@
   </head>
   <body>
     <div class="app">
-      <nav class="tabs" id="tabs" role="tablist" aria-label="Examples"></nav>
+      <div class="tabs" id="tabs" role="tablist" aria-label="Examples"></div>
 
       <div class="example" id="examplePanel" role="tabpanel" tabindex="0">
         <div class="example-grid">
@@ -320,22 +372,26 @@
             <div class="progress-track" id="progress" aria-hidden="true"></div>
 
             <div class="year-button-row">
-              <p class="year" id="year"></p>
-              <button class="action-btn" id="actionBtn">Advance &rarr;</button>
+              <p class="year" id="year" aria-live="polite"></p>
+              <button type="button" class="action-btn" id="actionBtn" data-state="advance">
+                <span class="btn-label btn-label--advance">Advance <span aria-hidden="true">&rarr;</span></span>
+                <span class="btn-label btn-label--summary">Summary <span aria-hidden="true">&rarr;</span></span>
+                <span class="btn-label btn-label--reset"><span aria-hidden="true">&#x21BA;</span> Reset</span>
+              </button>
             </div>
 
             <div class="stat-grid">
-                <div class="stat-card stat-card--accent">
-                  <div class="stat-label">Salary</div>
-                  <div class="stat-value" id="salary"></div>
-                </div>
-                <div class="stat-card">
-                  <div class="stat-label">Extra</div>
-                  <div class="stat-value" id="extra"></div>
-                </div>
+              <div class="stat-card stat-card--accent">
+                <div class="stat-label">Salary</div>
+                <div class="stat-value" id="salary"></div>
               </div>
+              <div class="stat-card">
+                <div class="stat-label">Extra</div>
+                <div class="stat-value" id="extra"></div>
+              </div>
+            </div>
 
-            <div class="summary-box" id="summaryBox" hidden>
+            <div class="summary-box" id="summaryBox" hidden aria-live="polite">
               <p class="summary" id="summary"></p>
               <p class="subsummary" id="subsummary"></p>
             </div>
@@ -348,8 +404,8 @@
       </div>
     </div>
 
-    <script>
-      const YEARS = [ "2025", "2026", "2027", "2028", "2029", "2030" ];
+    <script type="module">
+      const YEARS = Object.freeze([ "2025", "2026", "2027", "2028", "2029", "2030" ]);
       const DATA = [
         {
           slug: "first",
@@ -382,41 +438,35 @@
           summary: "Over the **five** years of the agreement:\n**23.7%** increase to base salary, plus $2,400 lump sum payments.",
           subsummary: "*Not included:* additional DSIs (compounded), location&thinsp;/&thinsp;on-call&thinsp;/&thinsp;inconvenience pay, any IDA&thinsp;/&thinsp;Drescher&thinsp;/&thinsp;etc., statutory (not contractual) gains from Tier 6 fix, …."
         },
-        {
-          slug: "second",
-          label: "Second Example",
-          title: "Same as the other example for now",
-          salary: [
-            "$76,000",
-            "$79,420",
-            "$83,647",
-            "$87,175",
-            "$90,790",
-            "$94,014"
-          ],
-          extra: [
-            "$0",
-            "$0",
-            "$600",
-            "$1,200",
-            "$1,800",
-            "$2,400"
-          ],
-          details: [
-            "Starting salary in 2025: **$76,000** (the median UUP salary)",
-            "4.5% ATB raise",
-            "4.0% ATB raise + $450 DSI + $250 7yr retention award + $350 12yr retention award\n$600 higher ed differential (lump sum)",
-            "3.5% ATB raise + $250 7yr retention award + $350 12yr retention award\n$600 higher ed differential (lump sum)",
-            "3.0% ATB raise + $250 7yr retention award + $750 17yr retention award\n$600 higher ed differential (lump sum)",
-            "3.0% ATB raise + $500 cost of living differential\n$600 higher ed differential (lump sum)"
-          ],
-          summary: "Over the **five** years of the agreement:\n**23.7%** increase to base salary, plus $2,400 lump sum payments.",
-          subsummary: "*Not included:* additional DSIs (compounded), location&thinsp;/&thinsp;on-call&thinsp;/&thinsp;inconvenience pay, any IDA&thinsp;/&thinsp;Drescher&thinsp;/&thinsp;etc., statutory (not contractual) gains from Tier 6 fix, …."
-        }
       ];
+      DATA.push(
+        { ...DATA[0], slug: "second", label: "Second Example", title: "Same as the first example for now" },
+        { ...DATA[0], slug: "third",  label: "Third Example",  title: "Same as the first example for now" },
+        { ...DATA[0], slug: "fourth", label: "Fourth Example", title: "Same as the first example for now" },
+        { ...DATA[0], slug: "fifth",  label: "Fifth Example",  title: "Same as the first example for now" },
+      );
 
-      const MAX_YEAR       = YEARS.length - 1;
-      const ANIM_DURATION  = 700;
+      const ACTION = Object.freeze({
+        INIT:      "init",
+        ADVANCE:   "advance",
+        RESET:     "reset",
+        SUMMARIZE: "summarize",
+      });
+
+      // --beat may be given in ms or s, bare number = ms, 0 (e.g., via prefers-reduced-motion) is valid
+      const rawBeat    = getComputedStyle(document.documentElement)
+                           .getPropertyValue("--beat").trim();
+      const parsedBeat = rawBeat.endsWith("ms") ? parseFloat(rawBeat)
+                       : rawBeat.endsWith("s")  ? parseFloat(rawBeat) * 1000
+                       : rawBeat !== "" && !Number.isNaN(Number(rawBeat)) ? Number(rawBeat)
+                       : NaN;
+      const BEAT       = Number.isNaN(parsedBeat) ? 350 : parsedBeat;
+
+      const TIMING = Object.freeze({
+        COUNT:   BEAT * 2,   // duration of number animation
+        ENTER:   BEAT * 0.6, // delay before a new log row fades in
+        SUMMARY: BEAT * 0.2, // delay before the summary box fades in
+      });
 
       let activeTab        = 0;
       let currentYear      = 0;
@@ -424,6 +474,7 @@
       let D                = DATA[activeTab];
 
       const elTabs         = document.getElementById("tabs");
+      const tabEls         = []; // filled by buildTabs()
       const elPanel        = document.getElementById("examplePanel");
       const elTitle        = document.getElementById("exampleTitle");
       const elYear         = document.getElementById("year");
@@ -442,6 +493,7 @@
       const formatText     = str => str
                                       .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
                                       .replace(/\*([^*]+)\*/g,     '<em>$1</em>');
+      // this is safe because DATA is hand-made
 
       // number animation — adapted from codepen.io/duvander/pen/KXOpXw
       // count from the currently-displayed value → to, with a cubic ease-out
@@ -451,14 +503,14 @@
         if (prev) { cancelAnimationFrame(prev); rafIds.delete(element); }
 
         const from = parseCurrency(element.textContent);
-        if (instant || Number.isNaN(from) || from === to) {
+        if (instant || TIMING.COUNT <= 0 || Number.isNaN(from) || from === to) {
           element.textContent = formatter(to);
           return;
         }
 
         const start = performance.now();
         function tick(now) {
-          const progress = Math.min((now - start) / ANIM_DURATION, 1);
+          const progress = Math.min(Math.max((now - start) / TIMING.COUNT, 0), 1);
           const eased    = 1 - Math.pow(1 - progress, 3);
           element.textContent = formatter(Math.round(from + (to - from) * eased));
           if (progress < 1) rafIds.set(element, requestAnimationFrame(tick));
@@ -483,20 +535,17 @@
         return li;
       }
 
-      function clearLog() {
-        elLog.innerHTML = "";
-      }
-
       function resetLog(year) {
-        clearLog();
+        elLog.innerHTML = "";
         const li = makeLogItem(year, true);
         elLog.appendChild(li);
-        li.animate([{ opacity: 0 }, { opacity: 1 }], { duration: ANIM_DURATION * 0.5, easing: "ease" });
+        li.animate([{ opacity: 0 }, { opacity: 1 }], { duration: BEAT, easing: "ease" });
       }
 
       // prepend the new current row; slide the existing rows down (FLIP)
       function advanceLog(year) {
-        const items     = Array.from(elLog.children);
+        const items = Array.from(elLog.children);
+        items.forEach(el => el.getAnimations().forEach(a => a.finish()));
         const firstTops = items.map(el => el.getBoundingClientRect().top);
 
         const cur = elLog.querySelector("li.current");
@@ -510,14 +559,14 @@
           if (delta) {
             el.animate(
               [{ transform: `translateY(${delta}px)` }, { transform: "translateY(0)" }],
-              { duration: ANIM_DURATION * 0.5, easing: "ease" }
+              { duration: BEAT, easing: "ease" }
             );
           }
         });
 
         li.animate(
           [{ opacity: 0, transform: "translateY(-8px)" }, { opacity: 1, transform: "translateY(0)" }],
-          { duration: ANIM_DURATION * 0.5, delay: ANIM_DURATION * 0.3, easing: "ease", fill: "backwards" }
+          { duration: BEAT, delay: TIMING.ENTER, easing: "ease", fill: "backwards" }
         );
       }
 
@@ -525,12 +574,12 @@
         const cur = elLog.querySelector("li.current");
         if (cur) cur.classList.remove("current");
 
-        elSummary.innerHTML    = formatText(D.summary);
+        elSummary.   innerHTML = formatText(D.summary);
         elSubsummary.innerHTML = formatText(D.subsummary);
         elSummaryBox.hidden = false;
         elSummaryBox.animate(
           [{ opacity: 0, transform: "translateY(12px)" }, { opacity: 1, transform: "translateY(0)" }],
-          { duration: ANIM_DURATION * 0.5, delay: ANIM_DURATION * 0.1, easing: "ease", fill: "backwards" }
+          { duration: BEAT, delay: TIMING.SUMMARY, easing: "ease", fill: "backwards" }
         );
       }
 
@@ -538,46 +587,51 @@
         elSummaryBox.hidden = true;
       }
 
-      function render(action) {
-        elTitle.textContent = D.title;
-        elYear.textContent  = YEARS[currentYear];
+      function renderHeader() {
+        elTitle.innerHTML   = formatText(D.title);
+        elYear .textContent = YEARS[currentYear];
+      }
 
-        const instant = action === "init";
+      function renderStats(instant) {
         animateNumber(elSalary, parseCurrency(D.salary[currentYear]), formatCurrency, instant);
         animateNumber(elExtra,  parseCurrency(D.extra [currentYear]), formatCurrency, instant);
+      }
 
-        if (action === "advance")                          advanceLog(currentYear);
-        else if (action === "init" || action === "reset")  resetLog(currentYear);
-
-        if (action === "summarize") showSummary();
-        else                        hideSummary();
-
+      function renderPips() {
         elPips.forEach((pip, i) => {
           const on = pip.classList.contains("progress-pip--summary") ? summaryShown : i < currentYear;
           pip.classList.toggle("filled", on);
         });
+      }
 
-        elBtn.innerHTML = summaryShown ? "&#x21BA; Reset" : "Advance &rarr;";
-        elBtn.classList.toggle("is-reset", summaryShown);
+      function renderButton() {
+        elBtn.dataset.state = summaryShown                     ? "reset"
+                            : currentYear === YEARS.length - 1 ? "summary"
+                            :                                    "advance";
+      }
+
+      function render(action) {
+        renderHeader();
+        renderPips();
+        renderButton();
+        renderStats(action === ACTION.INIT);
+
+        if (action === ACTION.ADVANCE)                               advanceLog(currentYear);
+        else if (action === ACTION.INIT || action === ACTION.RESET)  resetLog(currentYear);
+
+        if (action === ACTION.SUMMARIZE) showSummary();
+        else                             hideSummary();
       }
 
       elBtn.addEventListener("click", () => {
-        if (currentYear < MAX_YEAR) {
-          currentYear++;
-          render("advance");
-        } else if (!summaryShown) {
-          summaryShown = true;
-          render("summarize");
-        } else {
-          currentYear = 0;
-          summaryShown = false;
-          render("reset");
-        }
+        if (currentYear < YEARS.length - 1) { currentYear++;                         render(ACTION.ADVANCE);   }
+        else if (!summaryShown)             { summaryShown = true;                   render(ACTION.SUMMARIZE); }
+        else                                { currentYear = 0; summaryShown = false; render(ACTION.RESET);     }
       });
 
       function buildPips() {
         elProgress.innerHTML = "";
-        for (let i = 0; i < MAX_YEAR; i++) {
+        for (let i = 0; i < YEARS.length - 1; i++) {
           const pip = document.createElement("div");
           pip.className = "progress-pip";
           elProgress.appendChild(pip);
@@ -589,46 +643,46 @@
       }
 
       function buildTabs() {
-        elTabs.innerHTML = "";
         DATA.forEach((d, i) => {
           const btn = document.createElement("button");
           btn.type = "button";
-          btn.className = "tab" + (i === activeTab ? " is-active" : "");
+          btn.className = "tab";
           btn.id = "tab-" + i;
           btn.textContent = d.label;
           btn.dataset.tab = i;
           btn.setAttribute("role", "tab");
           btn.setAttribute("aria-controls", "examplePanel");
-          btn.setAttribute("aria-selected", i === activeTab ? "true" : "false");
-          btn.tabIndex = i === activeTab ? 0 : -1;
+          tabEls.push(btn);
           elTabs.appendChild(btn);
         });
-        syncPanel();
       }
 
-      function syncTabStates() {
-        Array.from(elTabs.children).forEach((t, i) => {
+      function applyActiveTab(scrollBehavior = "auto") {
+        tabEls.forEach((t, i) => {
           const active = i === activeTab;
           t.classList.toggle("is-active", active);
-          t.setAttribute("aria-selected", active ? "true" : "false");
+          t.setAttribute("aria-selected", String(active));
           t.tabIndex = active ? 0 : -1;
         });
-        syncPanel();
+        elPanel.setAttribute("aria-labelledby", "tab-" + activeTab);
+        tabEls[activeTab].scrollIntoView({ inline: "nearest", block: "nearest", behavior: scrollBehavior });
       }
 
-      function syncPanel() {
-        elPanel.setAttribute("aria-labelledby", "tab-" + activeTab);
+      function syncSlug() {
+        const url = new URL(location.href);
+        url.searchParams.set("s", D.slug);
+        history.replaceState(null, "", url);
       }
 
       function selectTab(idx) {
         if (idx === activeTab) return;
         activeTab = idx;
-        D = DATA[activeTab];
+        D = DATA[idx];
         currentYear = 0;
         summaryShown = false;
-        syncTabStates();
-        render("init");
-        history.replaceState(null, "", "?s=" + D.slug);
+        applyActiveTab("smooth");
+        render(ACTION.INIT);
+        syncSlug();
       }
 
       elTabs.addEventListener("click", e => {
@@ -646,20 +700,22 @@
 
         e.preventDefault();
         selectTab(idx);
-        elTabs.children[idx].focus();
+        tabEls[idx].focus({ preventScroll: true });
       });
 
-      // resolve the initial tab from the URL before the first render
+      // resolve the initial tab from the URL, then normalize the URL
       const initSlug = new URLSearchParams(location.search).get("s");
       const initIdx  = DATA.findIndex(d => d.slug === initSlug);
       if (initIdx > 0) { activeTab = initIdx; D = DATA[activeTab]; }
+      syncSlug();
 
       buildPips();
       buildTabs();
-      render("init");
+      applyActiveTab();
+      render(ACTION.INIT);
 
       document.addEventListener("keydown", e => {
-        if (e.key !== "Enter") return;
+        if (e.key !== "Enter" || e.repeat || e.isComposing) return;
         if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
         const t = e.target;
         if (t instanceof Element &&
