@@ -318,7 +318,9 @@
         padding: 0.8rem 1.5rem;
         cursor: pointer;
         border-radius: var(--radius);
-        transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+        transition-property: background, color, border-color, transform;
+        transition-duration: 0.2s;
+        transition-timing-function: ease;
         -webkit-tap-highlight-color: transparent;
         flex-shrink: 0;
       }
@@ -356,6 +358,18 @@
         transform: scale(var(--press-scale));
         transition-duration: 0s; /* press registers immediately; release uses the base timing */
       }
+      
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        padding: 0;
+        border: 0;
+        clip-path: inset(50%);
+        overflow: hidden;
+        white-space: nowrap;
+      }
     </style>
   </head>
   <body>
@@ -374,7 +388,7 @@
             <div class="progress-track" id="progress" aria-hidden="true"></div>
 
             <div class="year-button-row">
-              <p class="year" id="year" aria-live="polite"></p>
+              <p class="year" id="year"></p>
               <button type="button" class="action-btn" id="actionBtn" data-state="advance">
                 <span class="btn-label btn-label--advance">Advance <span aria-hidden="true">&rarr;</span></span>
                 <span class="btn-label btn-label--summary">Summary <span aria-hidden="true">&rarr;</span></span>
@@ -393,7 +407,7 @@
               </div>
             </div>
 
-            <div class="summary-box" id="summaryBox" hidden aria-live="polite">
+            <div class="summary-box" id="summaryBox" hidden>
               <p class="summary" id="summary"></p>
               <p class="subsummary" id="subsummary"></p>
             </div>
@@ -402,6 +416,8 @@
           <div class="example-details">
             <ul class="details-log" id="detailsLog"></ul>
           </div>
+
+          <span class="sr-only" id="srOnly" role="status"></span>
         </div>
       </div>
     </div>
@@ -473,7 +489,7 @@
       let activeTab        = 0;
       let currentYear      = 0;
       let summaryShown     = false;
-      let D                = DATA[activeTab];
+      let currentData      = DATA[activeTab];
 
       const elTabs         = document.getElementById("tabs");
       const tabEls         = []; // filled by buildTabs()
@@ -489,13 +505,14 @@
       const elSummaryBox   = document.getElementById("summaryBox");
       const elSummary      = document.getElementById("summary");
       const elSubsummary   = document.getElementById("subsummary");
+      const elSrOnly       = document.getElementById("srOnly");
 
       const parseCurrency  = str => parseInt(str.replace(/[$,]/g, ""), 10);
       const formatCurrency = n   => "$" + n.toLocaleString("en-US");
       const formatText     = str => str
                                       .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
                                       .replace(/\*([^*]+)\*/g,     '<em>$1</em>');
-      // this is safe because DATA is hand-made
+                          // this is safe because DATA is hand-made
 
       // number animation — adapted from codepen.io/duvander/pen/KXOpXw
       // count from the last tracked value → to, with a cubic ease-out
@@ -535,7 +552,7 @@
 
         const text = document.createElement("span");
         text.className = "log-text";
-        text.innerHTML = formatText(D.details[year]);
+        text.innerHTML = formatText(currentData.details[year]);
 
         li.append(label, text);
         return li;
@@ -580,8 +597,8 @@
         const cur = elLog.querySelector("li.current");
         if (cur) cur.classList.remove("current");
 
-        elSummary.   innerHTML = formatText(D.summary);
-        elSubsummary.innerHTML = formatText(D.subsummary);
+        elSummary.   innerHTML = formatText(currentData.summary);
+        elSubsummary.innerHTML = formatText(currentData.subsummary);
         elSummaryBox.hidden = false;
         elSummaryBox.animate(
           [{ opacity: 0, transform: "translateY(12px)" }, { opacity: 1, transform: "translateY(0)" }],
@@ -594,13 +611,13 @@
       }
 
       function renderHeader() {
-        elTitle.innerHTML   = formatText(D.title);
+        elTitle.innerHTML   = formatText(currentData.title);
         elYear .textContent = YEARS[currentYear];
       }
 
       function renderStats(instant) {
-        animateNumber(elSalary, parseCurrency(D.salary[currentYear]), formatCurrency, instant);
-        animateNumber(elExtra,  parseCurrency(D.extra [currentYear]), formatCurrency, instant);
+        animateNumber(elSalary, parseCurrency(currentData.salary[currentYear]), formatCurrency, instant);
+        animateNumber(elExtra,  parseCurrency(currentData.extra [currentYear]), formatCurrency, instant);
       }
 
       function renderPips() {
@@ -627,6 +644,10 @@
 
         if (action === ACTION.SUMMARIZE) showSummary();
         else                             hideSummary();
+        
+        elSrOnly.textContent = (action === ACTION.SUMMARIZE)
+          ? `${elSummary.textContent} ${elSubsummary.textContent}`
+          : `${YEARS[currentYear]}: salary ${currentData.salary[currentYear]}, extra ${currentData.extra[currentYear]}`;
       }
 
       elBtn.addEventListener("click", () => {
@@ -676,14 +697,14 @@
 
       function syncSlug() {
         const url = new URL(location.href);
-        url.searchParams.set("s", D.slug);
+        url.searchParams.set("s", currentData.slug);
         history.replaceState(null, "", url);
       }
 
       function selectTab(idx) {
         if (idx === activeTab) return;
         activeTab = idx;
-        D = DATA[idx];
+        currentData = DATA[idx];
         currentYear = 0;
         summaryShown = false;
         applyActiveTab("smooth");
@@ -712,7 +733,7 @@
       // resolve the initial tab from the URL, then normalize the URL
       const initSlug = new URLSearchParams(location.search).get("s");
       const initIdx  = DATA.findIndex(d => d.slug === initSlug);
-      if (initIdx > 0) { activeTab = initIdx; D = DATA[activeTab]; }
+      if (initIdx > 0) { activeTab = initIdx; currentData = DATA[activeTab]; }
       syncSlug();
 
       buildPips();
