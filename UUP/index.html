@@ -352,13 +352,14 @@
       .action-btn[data-state="summary"] { --btn-accent: var(--accent-muted); }
       .action-btn[data-state="reset"]   { --btn-accent: var(--muted); }
 
-      .action-btn:active {
+      .action-btn:active,
+      .action-btn.is-pressed {
         background: var(--btn-accent);
         color: var(--bg);
         transform: scale(var(--press-scale));
         transition-duration: 0s; /* press registers immediately; release uses the base timing */
       }
-      
+
       .sr-only {
         position: absolute;
         width: 1px;
@@ -380,7 +381,7 @@
 
       <div class="tabs" id="tabs" role="tablist" aria-label="Examples"></div>
 
-      <div class="example" id="examplePanel" role="tabpanel" tabindex="0">
+      <div class="example" id="examplePanel" role="tabpanel">
         <div class="example-grid">
           <div class="example-main">
             <h1 class="example-title" id="exampleTitle"></h1>
@@ -489,7 +490,6 @@
       let activeTab        = 0;
       let currentYear      = 0;
       let summaryShown     = false;
-      let currentData      = DATA[activeTab];
 
       const elTabs         = document.getElementById("tabs");
       const tabEls         = []; // filled by buildTabs()
@@ -552,7 +552,7 @@
 
         const text = document.createElement("span");
         text.className = "log-text";
-        text.innerHTML = formatText(currentData.details[year]);
+        text.innerHTML = formatText(DATA[activeTab].details[year]);
 
         li.append(label, text);
         return li;
@@ -597,8 +597,8 @@
         const cur = elLog.querySelector("li.current");
         if (cur) cur.classList.remove("current");
 
-        elSummary.   innerHTML = formatText(currentData.summary);
-        elSubsummary.innerHTML = formatText(currentData.subsummary);
+        elSummary.   innerHTML = formatText(DATA[activeTab].summary);
+        elSubsummary.innerHTML = formatText(DATA[activeTab].subsummary);
         elSummaryBox.hidden = false;
         elSummaryBox.animate(
           [{ opacity: 0, transform: "translateY(12px)" }, { opacity: 1, transform: "translateY(0)" }],
@@ -611,13 +611,13 @@
       }
 
       function renderHeader() {
-        elTitle.innerHTML   = formatText(currentData.title);
+        elTitle.innerHTML   = formatText(DATA[activeTab].title);
         elYear .textContent = YEARS[currentYear];
       }
 
       function renderStats(instant) {
-        animateNumber(elSalary, parseCurrency(currentData.salary[currentYear]), formatCurrency, instant);
-        animateNumber(elExtra,  parseCurrency(currentData.extra [currentYear]), formatCurrency, instant);
+        animateNumber(elSalary, parseCurrency(DATA[activeTab].salary[currentYear]), formatCurrency, instant);
+        animateNumber(elExtra,  parseCurrency(DATA[activeTab].extra [currentYear]), formatCurrency, instant);
       }
 
       function renderPips() {
@@ -644,10 +644,10 @@
 
         if (action === ACTION.SUMMARIZE) showSummary();
         else                             hideSummary();
-        
+
         elSrOnly.textContent = (action === ACTION.SUMMARIZE)
           ? `${elSummary.textContent} ${elSubsummary.textContent}`
-          : `${YEARS[currentYear]}: salary ${currentData.salary[currentYear]}, extra ${currentData.extra[currentYear]}`;
+          : `${YEARS[currentYear]}: salary ${DATA[activeTab].salary[currentYear]}, extra ${DATA[activeTab].extra[currentYear]}`;
       }
 
       elBtn.addEventListener("click", () => {
@@ -657,7 +657,6 @@
       });
 
       function buildPips() {
-        elProgress.innerHTML = "";
         for (let i = 0; i < YEARS.length - 1; i++) {
           const pip = document.createElement("div");
           pip.className = "progress-pip";
@@ -697,14 +696,13 @@
 
       function syncSlug() {
         const url = new URL(location.href);
-        url.searchParams.set("s", currentData.slug);
+        url.searchParams.set("s", DATA[activeTab].slug);
         history.replaceState(null, "", url);
       }
 
       function selectTab(idx) {
         if (idx === activeTab) return;
         activeTab = idx;
-        currentData = DATA[idx];
         currentYear = 0;
         summaryShown = false;
         applyActiveTab("smooth");
@@ -733,7 +731,7 @@
       // resolve the initial tab from the URL, then normalize the URL
       const initSlug = new URLSearchParams(location.search).get("s");
       const initIdx  = DATA.findIndex(d => d.slug === initSlug);
-      if (initIdx > 0) { activeTab = initIdx; currentData = DATA[activeTab]; }
+      if (initIdx > 0) activeTab = initIdx;
       syncSlug();
 
       buildPips();
@@ -741,13 +739,14 @@
       applyActiveTab();
       render(ACTION.INIT);
 
+      let pressTimer;
       document.addEventListener("keydown", e => {
-        if (e.key !== "Enter" || e.repeat || e.isComposing) return;
+        if (e.key !== " " || e.repeat) return;
         if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
-        const t = e.target;
-        if (t instanceof Element &&
-            t.closest("button, a, input, select, textarea, [contenteditable]")) return;
         e.preventDefault();
+        clearTimeout(pressTimer);
+        elBtn.classList.add("is-pressed");
+        pressTimer = setTimeout(() => elBtn.classList.remove("is-pressed"), 100);
         elBtn.click();
       });
     </script>
