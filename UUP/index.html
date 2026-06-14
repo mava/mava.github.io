@@ -417,9 +417,8 @@
           <div class="example-details">
             <ul class="details-log" id="detailsLog"></ul>
           </div>
-
-          <span class="sr-only" id="srOnly" role="status"></span>
         </div>
+        <span class="sr-only" id="srOnly" role="status"></span>
       </div>
     </div>
 
@@ -455,7 +454,7 @@
             "3.0% ATB raise + $500 cost of living differential\n$600 higher ed differential (lump sum)"
           ],
           summary: "Over the **five** years of the agreement:\n**23.7%** increase to base salary, plus $2,400 lump sum payments.",
-          subsummary: "*Not included:* additional DSIs (compounded), location&thinsp;/&thinsp;on-call&thinsp;/&thinsp;inconvenience pay, any IDA&thinsp;/&thinsp;Drescher&thinsp;/&thinsp;etc., statutory (not contractual) gains from Tier 6 fix, …."
+          subsummary: "*Not included:* additional DSIs (compounded), location&thinsp;/&thinsp;on-call&thinsp;/&thinsp;inconvenience pay, any IDA&thinsp;/&thinsp;Drescher&thinsp;/&thinsp;etc., statutory (not contractual) gains from Tier 6 fix, ….",
         },
       ];
       DATA.push(
@@ -464,13 +463,6 @@
         { ...DATA[0], slug: "fourth", label: "Fourth Example", title: "Same as the first example for now" },
         { ...DATA[0], slug: "fifth",  label: "Fifth Example",  title: "Same as the first example for now" },
       );
-
-      const ACTION = Object.freeze({
-        INIT:      "init",
-        ADVANCE:   "advance",
-        RESET:     "reset",
-        SUMMARIZE: "summarize",
-      });
 
       // --beat may be given in ms or s, bare number = ms, 0 (e.g., via prefers-reduced-motion) is valid
       const rawBeat    = getComputedStyle(document.documentElement)
@@ -487,9 +479,8 @@
         SUMMARY: BEAT * 0.2, // delay before the summary box fades in
       });
 
-      let activeTab        = 0;
-      let currentYear      = 0;
-      let summaryShown     = false;
+      let tab              = 0;
+      let stage            = 0;
 
       const elTabs         = document.getElementById("tabs");
       const tabEls         = []; // filled by buildTabs()
@@ -510,20 +501,20 @@
       const parseCurrency  = str => parseInt(str.replace(/[$,]/g, ""), 10);
       const formatCurrency = n   => "$" + n.toLocaleString("en-US");
       const formatText     = str => str
-                                      .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-                                      .replace(/\*([^*]+)\*/g,     '<em>$1</em>');
+                                      .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+                                      .replace(/\*([^*]+)\*/g,     "<em>$1</em>");
                           // this is safe because DATA is hand-made
 
       // number animation — adapted from codepen.io/duvander/pen/KXOpXw
       // count from the last tracked value → to, with a cubic ease-out
       const rafIds = new WeakMap();
       const values = new WeakMap();
-      function animateNumber(element, to, formatter, instant) {
+      function animateNumber(element, to, formatter, animate) {
         const prev = rafIds.get(element);
         if (prev) { cancelAnimationFrame(prev); rafIds.delete(element); }
 
         const from = values.get(element);
-        if (instant || TIMING.COUNT <= 0 || from === undefined || from === to) {
+        if (!animate || TIMING.COUNT <= 0 || from === undefined || from === to) {
           values.set(element, to);
           element.textContent = formatter(to);
           return;
@@ -542,31 +533,31 @@
         rafIds.set(element, requestAnimationFrame(tick));
       }
 
-      function makeLogItem(year, isCurrent) {
+      function makeLogItem() {
         const li = document.createElement("li");
-        if (isCurrent) li.classList.add("current");
+        li.classList.add("current");
 
         const label = document.createElement("span");
-        label.className = "log-year";
-        label.textContent = YEARS[year];
+        label.className   = "log-year";
+        label.textContent = YEARS[stage];
 
-        const text = document.createElement("span");
-        text.className = "log-text";
-        text.innerHTML = formatText(DATA[activeTab].details[year]);
+        const text  = document.createElement("span");
+        text.className    = "log-text";
+        text.innerHTML    = formatText(DATA[tab].details[stage]);
 
         li.append(label, text);
         return li;
       }
 
-      function resetLog(year) {
-        elLog.innerHTML = "";
-        const li = makeLogItem(year, true);
+      function resetLog() {
+        elLog.replaceChildren();
+        const li = makeLogItem();
         elLog.appendChild(li);
         li.animate([{ opacity: 0 }, { opacity: 1 }], { duration: BEAT, easing: "ease" });
       }
 
       // prepend the new current row; slide the existing rows down (FLIP)
-      function advanceLog(year) {
+      function advanceLog() {
         const items = Array.from(elLog.children);
         items.forEach(el => el.getAnimations().forEach(a => a.finish()));
         const firstTops = items.map(el => el.getBoundingClientRect().top);
@@ -574,7 +565,7 @@
         const cur = elLog.querySelector("li.current");
         if (cur) cur.classList.remove("current");
 
-        const li = makeLogItem(year, true);
+        const li = makeLogItem();
         elLog.prepend(li);
 
         items.forEach((el, i) => {
@@ -597,8 +588,8 @@
         const cur = elLog.querySelector("li.current");
         if (cur) cur.classList.remove("current");
 
-        elSummary.   innerHTML = formatText(DATA[activeTab].summary);
-        elSubsummary.innerHTML = formatText(DATA[activeTab].subsummary);
+        elSummary.   innerHTML = formatText(DATA[tab].summary);
+        elSubsummary.innerHTML = formatText(DATA[tab].subsummary);
         elSummaryBox.hidden = false;
         elSummaryBox.animate(
           [{ opacity: 0, transform: "translateY(12px)" }, { opacity: 1, transform: "translateY(0)" }],
@@ -610,50 +601,31 @@
         elSummaryBox.hidden = true;
       }
 
-      function renderHeader() {
-        elTitle.innerHTML   = formatText(DATA[activeTab].title);
-        elYear .textContent = YEARS[currentYear];
-      }
+      function render({ animateNumbers = false } = {}) {
+        if (stage === 0) {
+          elTitle.innerHTML = formatText(DATA[tab].title);
+          resetLog();
+          hideSummary();
+        }
+        if (stage < YEARS.length) { // stage 0 also matches here
+          elYear.textContent = YEARS[stage];
+          animateNumber(elSalary, parseCurrency(DATA[tab].salary[stage]), formatCurrency, animateNumbers);
+          animateNumber(elExtra,  parseCurrency(DATA[tab].extra [stage]), formatCurrency, animateNumbers);
+          if (stage > 0) advanceLog();
+          elBtn.dataset.state  = stage < YEARS.length - 1 ? "advance" : "summary";
+          elSrOnly.textContent = `${YEARS[stage]}: salary ${DATA[tab].salary[stage]}, extra ${DATA[tab].extra[stage]}`;
+        } else { // last stage
+          showSummary();
+          elBtn.dataset.state  = "reset";
+          elSrOnly.textContent = `${elSummary.textContent} ${elSubsummary.textContent}`;
+        }
 
-      function renderStats(instant) {
-        animateNumber(elSalary, parseCurrency(DATA[activeTab].salary[currentYear]), formatCurrency, instant);
-        animateNumber(elExtra,  parseCurrency(DATA[activeTab].extra [currentYear]), formatCurrency, instant);
-      }
-
-      function renderPips() {
-        elPips.forEach((pip, i) => {
-          const on = pip.classList.contains("progress-pip--summary") ? summaryShown : i < currentYear;
-          pip.classList.toggle("filled", on);
-        });
-      }
-
-      function renderButton() {
-        elBtn.dataset.state = summaryShown                     ? "reset"
-                            : currentYear === YEARS.length - 1 ? "summary"
-                            :                                    "advance";
-      }
-
-      function render(action) {
-        renderHeader();
-        renderPips();
-        renderButton();
-        renderStats(action === ACTION.INIT);
-
-        if (action === ACTION.ADVANCE)                               advanceLog(currentYear);
-        else if (action === ACTION.INIT || action === ACTION.RESET)  resetLog(currentYear);
-
-        if (action === ACTION.SUMMARIZE) showSummary();
-        else                             hideSummary();
-
-        elSrOnly.textContent = (action === ACTION.SUMMARIZE)
-          ? `${elSummary.textContent} ${elSubsummary.textContent}`
-          : `${YEARS[currentYear]}: salary ${DATA[activeTab].salary[currentYear]}, extra ${DATA[activeTab].extra[currentYear]}`;
+        elPips.forEach((pip, i) => pip.classList.toggle("filled", i < stage));
       }
 
       elBtn.addEventListener("click", () => {
-        if (currentYear < YEARS.length - 1) { currentYear++;                         render(ACTION.ADVANCE);   }
-        else if (!summaryShown)             { summaryShown = true;                   render(ACTION.SUMMARIZE); }
-        else                                { currentYear = 0; summaryShown = false; render(ACTION.RESET);     }
+        stage = (stage + 1) % (YEARS.length + 1);
+        render({ animateNumbers: true });
       });
 
       function buildPips() {
@@ -685,28 +657,27 @@
 
       function applyActiveTab(scrollBehavior = "auto") {
         tabEls.forEach((t, i) => {
-          const active = i === activeTab;
+          const active = i === tab;
           t.classList.toggle("is-active", active);
           t.setAttribute("aria-selected", String(active));
           t.tabIndex = active ? 0 : -1;
         });
-        elPanel.setAttribute("aria-labelledby", "tab-" + activeTab);
-        tabEls[activeTab].scrollIntoView({ inline: "nearest", block: "nearest", behavior: scrollBehavior });
+        elPanel.setAttribute("aria-labelledby", "tab-" + tab);
+        tabEls[tab].scrollIntoView({ inline: "nearest", block: "nearest", behavior: scrollBehavior });
       }
 
       function syncSlug() {
         const url = new URL(location.href);
-        url.searchParams.set("s", DATA[activeTab].slug);
+        url.searchParams.set("s", DATA[tab].slug);
         history.replaceState(null, "", url);
       }
 
       function selectTab(idx) {
-        if (idx === activeTab) return;
-        activeTab = idx;
-        currentYear = 0;
-        summaryShown = false;
+        if (idx === tab) return;
+        tab = idx;
+        stage = 0;
         applyActiveTab("smooth");
-        render(ACTION.INIT);
+        render();
         syncSlug();
       }
 
@@ -717,8 +688,8 @@
 
       elTabs.addEventListener("keydown", e => {
         let idx;
-        if (e.key === "ArrowRight")     idx = (activeTab + 1) % DATA.length;
-        else if (e.key === "ArrowLeft") idx = (activeTab - 1 + DATA.length) % DATA.length;
+        if (e.key === "ArrowRight")     idx = (tab + 1) % DATA.length;
+        else if (e.key === "ArrowLeft") idx = (tab - 1 + DATA.length) % DATA.length;
         else if (e.key === "Home")      idx = 0;
         else if (e.key === "End")       idx = DATA.length - 1;
         else return;
@@ -731,13 +702,13 @@
       // resolve the initial tab from the URL, then normalize the URL
       const initSlug = new URLSearchParams(location.search).get("s");
       const initIdx  = DATA.findIndex(d => d.slug === initSlug);
-      if (initIdx > 0) activeTab = initIdx;
+      if (initIdx > 0) tab = initIdx;
       syncSlug();
 
       buildPips();
       buildTabs();
       applyActiveTab();
-      render(ACTION.INIT);
+      render();
 
       let pressTimer;
       document.addEventListener("keydown", e => {
