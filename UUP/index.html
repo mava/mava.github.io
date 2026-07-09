@@ -3,11 +3,11 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Examples</title>
+    <title>UUP Tentative Agreement 2026–2031</title>
     <meta name="author" content="Marco Varisco">
     <meta name="color-scheme" content="dark">
     <meta name="theme-color" content="#0c0c0c">
-    <link rel="icon" type="image/png" href="/images/%E2%88%87.png">
+    <link rel="icon" type="image/png" href="https://uupinfo.org/css/templateimages/uup-logo-color.png">
     <style>
       :root {
         --bg:            #0c0c0c;
@@ -151,10 +151,7 @@
       }
 
       .example-title {
-        font-size: 1rem;
-        font-weight: 400; /* instead of bold on h1 */
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
+        font-size: 1.125rem;
         text-wrap: balance;
         color: var(--accent);
         margin: 0 0 1.5rem;
@@ -403,7 +400,7 @@
                 <div class="stat-value" id="salary"></div>
               </div>
               <div class="stat-card">
-                <div class="stat-label">Extra</div>
+                <div class="stat-label">Total Lump Sums</div>
                 <div class="stat-value" id="extra"></div>
               </div>
             </div>
@@ -424,11 +421,11 @@
 
     <script type="module">
       const YEARS = Object.freeze([ "2025", "2026", "2027", "2028", "2029", "2030" ]);
-      const DATA = [
+      const DATA  = Object.freeze([
         {
-          slug: "first",
-          label: "First Example",
-          title: "FT Academic hired in 2012",
+          slug: "median",
+          label: "14-yr Full-Time",
+          title: "14-yr Full-Time Employee, Median Starting Salary",
           salary: [
             "$76,000",
             "$79,420",
@@ -446,23 +443,110 @@
             "$2,400"
           ],
           details: [
-            "Starting salary in 2025: **$76,000** (the median UUP salary)",
-            "4.5% ATB raise",
-            "4.0% ATB raise + $450 DSI + $250 7yr retention award + $350 12yr retention award\n$600 higher ed differential (lump sum)",
-            "3.5% ATB raise + $250 7yr retention award + $350 12yr retention award\n$600 higher ed differential (lump sum)",
-            "3.0% ATB raise + $250 7yr retention award + $750 17yr retention award\n$600 higher ed differential (lump sum)",
-            "3.0% ATB raise + $500 cost of living differential\n$600 higher ed differential (lump sum)"
+            "Salary in 2025: **$76,000** (the median UUP salary).",
+            "4.5% ATB raise.",
+            "4.0% ATB raise + $450 DSI + $250 7yr retention award + $350 12yr retention award;\n$600 higher ed differential (lump sum).",
+            "3.5% ATB raise + $250 7yr retention award + $350 12yr retention award;\n$600 higher ed differential (lump sum).",
+            "3.0% ATB raise + $250 7yr retention award + $750 17yr retention award;\n$600 higher ed differential (lump sum).",
+            "3.0% ATB raise + $500 cost of living differential;\n$600 higher ed differential (lump sum)."
           ],
-          summary: "Over the **five** years of the agreement:\n**23.7%** increase to base salary, plus $2,400 lump sum payments.",
-          subsummary: "*Not included:* additional DSIs (compounded), location&thinsp;/&thinsp;on-call&thinsp;/&thinsp;inconvenience pay, any IDA&thinsp;/&thinsp;Drescher&thinsp;/&thinsp;etc., statutory (not contractual) gains from Tier 6 fix, ….",
+          summary: "Over the **five** years of the agreement:\n**23.7%** increase to base salary (24.5% including 2030 lump sum) + $2,400 cumulative lump sum payments.",
+          subsummary: "*Not included:* any additional DSIs (compounded), location&thinsp;/&thinsp;on-call&thinsp;/&thinsp;inconvenience pay, any IDA&thinsp;/&thinsp;Drescher&thinsp;/&thinsp;CLEFR&thinsp;/&thinsp;etc., DCAA employer contributions, statutory (not contractual) gains from Tier 6 fix, ….",
         },
-      ];
-      DATA.push(
-        { ...DATA[0], slug: "second", label: "Second Example", title: "Same as the first example for now" },
-        { ...DATA[0], slug: "third",  label: "Third Example",  title: "Same as the first example for now" },
-        { ...DATA[0], slug: "fourth", label: "Fourth Example", title: "Same as the first example for now" },
-        { ...DATA[0], slug: "fifth",  label: "Fifth Example",  title: "Same as the first example for now" },
-      );
+        {
+          slug: "adjunct",
+          label: "10-yr Adjunct",
+          title: "10-yr Adjunct Teaching 2 Courses/Semester at Comps/Techs",
+          salary: [
+            "$18,000",
+            "$22,000",
+            "$23,000",
+            "$24,000",
+            "$25,000",
+            "$26,000",
+          ],
+          extra: [
+            "$0",
+            "$0",
+            "$1,025",
+            "$1,825",
+            "$3,125",
+            "$4,675"
+          ],
+          details: [
+            "Adjunct/Part-Time Lecturer at a Comprehensive or Technology College, minimum $4,500 per 3-credit course (+ $500/course at University Centers or HSCs).",
+            "$5,500 per 3-credit course (negotiated increase from 2022–2026 contract).",
+            "$5,750 per 3-credit course;\nlump sums: $300 higher ed differential + $500 12yr retention award + $225 DSI.",
+            "$6,000 per 3-credit course;\nlump sums: $300 higher ed differential + $500 12yr retention award.",
+            "$6,250 per 3-credit course;\nlump sums: $300 higher ed differential + $500 7yr retention award + $500 12yr retention award.",
+            "$6,500 per 3-credit course;\nlump sums: $300 higher ed differential + $500 7yr retention award + $500 12yr retention award + $250 cost of living differential."
+          ],
+          summary: "Over the **five** years of the agreement:\n**44.5%** increase to base salary (53% including 2030 lump sum) + $4,675 cumulative lump sum payments.",
+          subsummary: "At University or Health Science Centers, the minimum salary for each 3-credit course is $500 more each year, so the yearly salary for two 3-credit courses/semester at minimum goes from $20,000 in 2025 to $28,000 in 2030, a 40% increase.",
+        },
+        {
+          slug: "sl3",
+          label: "3-yr SL3",
+          title: "3-yr SL3, Family Plan Enrollee, ERS Tier 6",
+          salary: [
+            "$61,000",
+            "$63,745",
+            "$66,745",
+            "$69,081",
+            "$72,903",
+            "$75,590",
+          ],
+          extra: [
+            "$0",
+            "$0",
+            "$600",
+            "$1,200",
+            "$1,800",
+            "$2,400"
+          ],
+          details: [
+            "Starting salary in 2025: **$61,000**.",
+            "4.5% ATB raise;\n$1,352 health benefits premium savings (paying 27%, down from 31%) + $956 ERS savings (employee contributions toward premium).",
+            "4.0% ATB raise + $450 DSI;\n$600 higher ed differential (lump sum);\n$1,406 HB + $1,001 ERS savings.",
+            "3.5% ATB raise;\n$600 higher ed differential (lump sum);\n$1,455 HB + $1,036 ERS savings.",
+            "3.0% ATB raise + $1,750 7yr retention award;\n$600 higher ed differential (lump sum);\n$1,499 HB + $1,094 ERS savings.",
+            "3.0% ATB raise + $500 cost of living differential;\n$600 higher ed differential (lump sum);\n$1,544 HB + $1,323 ERS savings."
+          ],
+          summary: "Over the **five** years of the agreement:\n**24%** increase to base salary (30% including 2030 savings and lump sum) + $2,400 cumulative lump sum payments + $7,256 health benefits premium savings + $5,410 in ERS savings.",
+          subsummary: "*Not included:* any additional DSIs (compounded), location&thinsp;/&thinsp;on-call&thinsp;/&thinsp;inconvenience pay, any IDA&thinsp;/&thinsp;Drescher&thinsp;/&thinsp;CLEFR&thinsp;/&thinsp;etc., DCAA employer contributions, ….",
+        },
+        {
+          slug: "downstate",
+          label: "Downstate",
+          title: "14-yr Downstate Professional (New Location Pay)",
+          salary: [
+            "$100,000",
+            "$104,500",
+            "$109,730",
+            "$114,171",
+            "$118,596",
+            "$122,654",
+          ],
+          extra: [
+            "$0",
+            "$0",
+            "$600",
+            "$1,200",
+            "$1,800",
+            "$2,400"
+          ],
+          details: [
+            "Starting salary in 2025: **$100,000**.",
+            "4.5% ATB raise;\n$4,150 location pay ($150 new).",
+            "4.0% ATB raise + $450 DSI + $250 7yr retention award + $350 12yr retention award;\n$600 higher ed differential (lump sum);\n$5,150 location pay ($1,150 new).",
+            "3.5% ATB raise + $250 7yr retention award + $350 12yr retention award;\n$600 higher ed differential (lump sum);\n$6,150 location pay ($2,150 new).",
+            "3.0% ATB raise + $250 7yr retention award + $750 17yr retention award;\n$600 higher ed differential (lump sum);\n$6,400 location pay ($2,400 new).",
+            "3.0% ATB raise + $500 cost of living differential;\n$600 higher ed differential (lump sum);\n$6,650 location pay ($2,650 new)."
+          ],
+          summary: "Over the **five** years of the agreement:\n**23%** increase to base salary (26% including 2030 lump sum and new location pay) + $2,400 cumulative lump sum payments + $8,500 new location pay.",
+          subsummary: "*Not included:* any additional DSIs (compounded), on-call&thinsp;/&thinsp;inconvenience pay, any IDA&thinsp;/&thinsp;Drescher&thinsp;/&thinsp;CLEFR&thinsp;/&thinsp;etc., DCAA employer contributions, statutory (not contractual) gains from Tier 6 fix, ….",
+        },
+      ]);
 
       // --beat may be given in ms or s, bare number = ms, 0 (e.g., via prefers-reduced-motion) is valid
       const rawBeat    = getComputedStyle(document.documentElement)
